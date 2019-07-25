@@ -3,11 +3,15 @@
 
 #include <board.h>
 
-#define led_amount	1
+/*************功能启动宏定义*************/
+#define PIN_HIGH_ENABLE		//定义点亮LED有效电平
+#define led_amount	2
+
+
 
 struct led
 {
-	rt_uint8_t 	pin_number;//LED引脚索引号
+	rt_base_t 	pin_number;//LED引脚索引号
 	rt_uint16_t pin_stander;//高八位存储一种闪烁方式，低八位存储一种闪烁方式
 							//存储方式中：高四位存储变化次数，低四位存储定时时间
 	rt_uint8_t 	pin_cont;//低四位记录定时时间，高四位记录LED状态变化次数
