@@ -468,14 +468,9 @@
               <FilePath>applications\main.c</FilePath>
             </File>
             <File>
-              <FileName>AD7739.c</FileName>
+              <FileName>led.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\applications\AD7739.c</FilePath>
-            </File>
-            <File>
-              <FileName>AD7739_sample.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\applications\AD7739_sample.c</FilePath>
+              <FilePath>.\applications\led.c</FilePath>
             </File>
           </Files>
         </Group>

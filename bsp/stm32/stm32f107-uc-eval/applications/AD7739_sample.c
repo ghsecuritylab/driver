@@ -13,6 +13,7 @@ void sample_entry(void *parameter)
 	while(1)
 	{
 		ad7739_read(dev,AD7739_REV,&cmd,1);
+		ad7739_channel_read(dev,buffer,3);
 		rt_thread_delay(1000);
 	}
 }
