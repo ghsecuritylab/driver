@@ -7,10 +7,13 @@
 #define USING_AD7739_DEFAULT_CONFIG
 
 /**********default config***********/
-#define IO_PORT_VALUE		0x38
-#define CHANNEL_SET_VALUE	0x0d
-#define CHANNEL_CONV_TIME	0x91
-#define MODE_SET_VALUE		0x22
+const static rt_uint8_t AD7739_Config[4] =
+{
+	0x38,	//IO_PORT_VALUE
+	0x0D,	//CHANNEL_SET_VALUE
+	0x91,	//CHANNEL_CONV_TIME
+	0x22,	//MODE_SET_VALUE
+};		
 
 
 struct AD7739
@@ -47,8 +50,8 @@ typedef struct AD7739 *AD7739_t;
 #define AD7739_MODE	        	0x38
 
 
-rt_size_t ad7739_write(AD7739_t device,rt_uint8_t addr,rt_uint8_t *value);
-rt_size_t ad7739_read(AD7739_t device,rt_uint8_t addr,rt_uint8_t *buffer,rt_uint8_t length);
+rt_size_t ad7739_write(AD7739_t device,rt_uint8_t addr,const void *value);
+rt_size_t ad7739_read(AD7739_t device,rt_uint8_t addr,void *buffer,rt_uint8_t length);
 void ad7739_channel_read(AD7739_t device,rt_uint8_t *buffer,rt_uint8_t length);
 
 int ad7739_init(const char *spi_bus_name,AD7739_t adc,

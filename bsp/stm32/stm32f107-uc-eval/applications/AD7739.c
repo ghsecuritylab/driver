@@ -8,7 +8,7 @@
 
 #include <drv_log.h>
 
-rt_size_t ad7739_write(AD7739_t device,rt_uint8_t addr,rt_uint8_t *value)
+rt_size_t ad7739_write(AD7739_t device,rt_uint8_t addr,const void *value)
 {
 	static rt_uint8_t cmd;
 	cmd = AD7739_WRITE|addr;
@@ -17,7 +17,7 @@ rt_size_t ad7739_write(AD7739_t device,rt_uint8_t addr,rt_uint8_t *value)
 	return rt_spi_send(device->spi_device,value,1);
 }
 
-rt_size_t ad7739_read(AD7739_t device,rt_uint8_t addr,rt_uint8_t *buffer,rt_uint8_t length)
+rt_size_t ad7739_read(AD7739_t device,rt_uint8_t addr,void *buffer,rt_uint8_t length)
 {
 	static rt_uint8_t cmd;
 	cmd = AD7739_READ|addr;
@@ -48,21 +48,15 @@ void ad7739_channel_read(AD7739_t device,rt_uint8_t *buffer,rt_uint8_t length)
 
 static void ad7739_config(AD7739_t device,rt_uint8_t chan_enable)
 {
-	rt_uint8_t cmd;
-	
-	cmd = IO_PORT_VALUE;
-	ad7739_write(device,AD7739_IOPORT,&cmd);
+	ad7739_write(device,AD7739_IOPORT,&AD7739_Config[0]);
 	
 	for(int i=0;i<8;i++)
 	{
 		if((chan_enable>>i)&0x01)
 		{
-			cmd = CHANNEL_SET_VALUE;
-			ad7739_write(device,AD7739_CHAN_SETUP+i,&cmd);
-			cmd = CHANNEL_CONV_TIME;
-			ad7739_write(device,AD7739_CHAN_CONV_TIME+i,&cmd);
-			cmd = MODE_SET_VALUE;
-			ad7739_write(device,AD7739_MODE+i,&cmd);
+			ad7739_write(device,AD7739_CHAN_SETUP+i,&AD7739_Config[1]);
+			ad7739_write(device,AD7739_CHAN_CONV_TIME+i,&AD7739_Config[2]);
+			ad7739_write(device,AD7739_MODE+i,&AD7739_Config[3]);
 		}
 	}	
 }

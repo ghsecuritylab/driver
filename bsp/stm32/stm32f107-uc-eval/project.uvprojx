@@ -463,14 +463,14 @@
           <GroupName>Applications</GroupName>
           <Files>
             <File>
+              <FileName>FM25CL64.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>applications\FM25CL64.c</FilePath>
+            </File>
+            <File>
               <FileName>main.c</FileName>
               <FileType>1</FileType>
               <FilePath>applications\main.c</FilePath>
-            </File>
-            <File>
-              <FileName>led.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\applications\led.c</FilePath>
             </File>
           </Files>
         </Group>
