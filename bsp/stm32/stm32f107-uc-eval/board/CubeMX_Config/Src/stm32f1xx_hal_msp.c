@@ -137,7 +137,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     __HAL_AFIO_REMAP_USART2_ENABLE();
 
     /* USART2 interrupt Init */
-    HAL_NVIC_SetPriority(USART2_IRQn, 0, 0);
+    HAL_NVIC_SetPriority(USART2_IRQn, 0, 1);
     HAL_NVIC_EnableIRQ(USART2_IRQn);
   /* USER CODE BEGIN USART2_MspInit 1 */
 
@@ -206,8 +206,33 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
 		HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 			
 		/* SPI1 interrupt Init */
-//		HAL_NVIC_SetPriority(SPI1_IRQn, 0, 0);
-//		HAL_NVIC_EnableIRQ(SPI1_IRQn);
+		HAL_NVIC_SetPriority(SPI1_IRQn, 0, 1);
+		HAL_NVIC_EnableIRQ(SPI1_IRQn);
+	}
+	else if(hspi->Instance==SPI2)
+	{
+		__HAL_RCC_SPI2_CLK_ENABLE();
+		__HAL_RCC_GPIOB_CLK_ENABLE();
+		
+		/**SPI1 GPIO Configuration
+		PB13		------> SPI2_SCLK
+		PB14		------>	SPI2_MISO
+		PB15		------>	SPI2_MOSI
+		*/
+		
+		GPIO_InitStruct.Pin = GPIO_PIN_13|GPIO_PIN_15;
+		GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_HIGH;
+		HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+		GPIO_InitStruct.Pin = GPIO_PIN_14;
+		GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+		GPIO_InitStruct.Pull = GPIO_NOPULL;
+		HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+			
+		/* SPI1 interrupt Init */
+		HAL_NVIC_SetPriority(SPI2_IRQn, 0, 1);
+		HAL_NVIC_EnableIRQ(SPI2_IRQn);
 	}
 }
 
@@ -220,6 +245,14 @@ void HAL_SPI_MspDeInit(SPI_HandleTypeDef *hspi)
 		HAL_GPIO_DeInit(GPIOA,GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7);
 		
 		HAL_NVIC_DisableIRQ(SPI1_IRQn);
+	}
+	else if(hspi->Instance==SPI2)
+	{
+		__HAL_RCC_SPI2_CLK_DISABLE();
+		
+		HAL_GPIO_DeInit(GPIOB,GPIO_PIN_13|GPIO_PIN_14|GPIO_PIN_15);
+		
+		HAL_NVIC_DisableIRQ(SPI2_IRQn);
 	}
 }
 /* USER CODE END 1 */
