@@ -30,6 +30,7 @@ void ad7739_channel_read(AD7739_t device,rt_uint8_t *buffer,rt_uint8_t length)
 {
 	rt_uint8_t adc_status;
 	
+	/***waitting for all enabled channel translate ok***/
 	while(adc_status!=device->channel_enable)
 	{
 		ad7739_read(device,AD7739_ADC_STATUS,&adc_status,1);
@@ -62,17 +63,17 @@ static void ad7739_config(AD7739_t device,rt_uint8_t chan_enable)
 }
 
 
-int ad7739_init(const char *spi_bus_name,AD7739_t adc,
+rt_err_t ad7739_init(const char *spi_bus_name,AD7739_t device,
 				GPIO_TypeDef *cs_gpiox, uint16_t cs_gpio_pin)
 {
-	rt_hw_spi_device_attach(spi_bus_name,adc->adc_device_name,cs_gpiox,cs_gpio_pin);
+	rt_hw_spi_device_attach(spi_bus_name,device->adc_device_name,cs_gpiox,cs_gpio_pin);
 	
-	rt_pin_mode(adc->reset_pin,PIN_MODE_OUTPUT);
-	rt_pin_mode(adc->ready_pin,PIN_MODE_INPUT_PULLUP);
+	rt_pin_mode(device->reset_pin,PIN_MODE_OUTPUT);
+	rt_pin_mode(device->ready_pin,PIN_MODE_INPUT_PULLUP);
 	
-	adc->spi_device = (struct rt_spi_device *)rt_device_find(adc->adc_device_name);
+	device->spi_device = (struct rt_spi_device *)rt_device_find(device->adc_device_name);
 	
-	if(adc->spi_device==RT_NULL)
+	if(device->spi_device==RT_NULL)
 	{
 		LOG_E("ADC device find error! Please check!\n");
 		return RT_NULL;
@@ -84,18 +85,19 @@ int ad7739_init(const char *spi_bus_name,AD7739_t adc,
 		cfg.data_width = 8;
         cfg.mode = RT_SPI_MASTER | RT_SPI_MODE_3 | RT_SPI_MSB;
         cfg.max_hz = 6 * 1000 *1000;
-		rt_spi_configure(adc->spi_device,&cfg);
+		rt_spi_configure(device->spi_device,&cfg);
 	}
 	
 	/*			Reset AD7739		*/
-	rt_pin_write(adc->reset_pin,PIN_LOW);
+	rt_pin_write(device->reset_pin,PIN_LOW);
 	rt_thread_delay(5);
-	rt_pin_write(adc->reset_pin,PIN_HIGH);
+	rt_pin_write(device->reset_pin,PIN_HIGH);
 	
 #ifdef	USING_AD7739_DEFAULT_CONFIG
-	ad7739_config(adc,adc->channel_enable);
+	ad7739_config(device,device->channel_enable);
 #endif
 	
+	LOG_D("%s init success!\n",device->adc_device_name);
 	return RT_EOK;
 }
 

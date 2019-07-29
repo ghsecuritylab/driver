@@ -54,7 +54,7 @@ rt_size_t ad7739_write(AD7739_t device,rt_uint8_t addr,const void *value);
 rt_size_t ad7739_read(AD7739_t device,rt_uint8_t addr,void *buffer,rt_uint8_t length);
 void ad7739_channel_read(AD7739_t device,rt_uint8_t *buffer,rt_uint8_t length);
 
-int ad7739_init(const char *spi_bus_name,AD7739_t adc,
+rt_err_t ad7739_init(const char *spi_bus_name,AD7739_t adc,
 				GPIO_TypeDef *cs_gpiox, uint16_t cs_gpio_pin);
 
 void ad7739_deinit(AD7739_t device);
