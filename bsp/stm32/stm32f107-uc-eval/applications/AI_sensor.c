@@ -3,6 +3,31 @@
 #include <rtthread.h>
 #include <ad7739.h>
 
+typedef struct ad_sensor
+{
+	float sensor_value;
+	const float radio;
+	float offset;
+	const float full;
+	const float zero;
+}ad_sensor;
+
+ad_sensor sensor_center[12] = 
+{
+	{0.0,1.0,0.0,20.0,0.0},
+	{0.0,1.0,0.0,20.0,0.0},
+	{0.0,1.0,0.0,20.0,0.0},
+	{0.0,1.0,0.0,20.0,0.0},
+	{0.0,1.0,0.0,20.0,0.0},
+	{0.0,1.0,0.0,20.0,0.0},
+	{0.0,1.0,0.0,20.0,0.0},
+	{0.0,1.0,0.0,20.0,0.0},
+	{0.0,1.0,0.0,20.0,0.0},
+	{0.0,1.0,0.0,20.0,0.0},
+	{0.0,1.0,0.0,20.0,0.0},
+	{0.0,1.0,0.0,20.0,0.0}
+};
+
 /*****allow extern change*****/
 float sensor_radio[12] = {0.0}; 
 float sensor_offset[12] = {0.0}; 
@@ -29,7 +54,8 @@ static rt_err_t sensor_update()
 			{
 				temp = temp<<8|adc_channel_value[j]; 
 			}
-			sensor_value[i] = (float)(temp*5)/0xffffff;
+//			sensor_value[i] = (float)(temp*5)/0xffffff;
+			sensor_center[i].sensor_value = (float)(temp*5)/0xffffff;
 			temp = 0;
 		}
 		return RT_EOK;
@@ -51,20 +77,30 @@ static rt_err_t sensor_filt()
 		
 		for(int j=0;j<12;j++)
 		{
-			temp_buffer[j] += sensor_value[j];
+//			temp_buffer[j] += sensor_value[j];
+			temp_buffer[j] += sensor_center[j].sensor_value;
 		}
 	}
 	
 	/**********get average value***********/
 	for(int k=0;k<12;k++)
 	{
-		sensor_value[k] = temp_buffer[k]/10.0;
+//		sensor_value[k] = temp_buffer[k]/10.0;
+		sensor_center[k].sensor_value = temp_buffer[k]/10.0;
+		sensor_center[k].sensor_value = sensor_center[k].sensor_value
+										* sensor_center[k].radio	// Multi radio value
+										+ sensor_center[k].offset;	// Add offset value
 		
 		/*discard the extra low value*/
-		if(sensor_value[k]<0.0001)
-			sensor_value[k]=0.00;
-		else 
-			sensor_value[k] += 0.05;
+//		if(sensor_value[k]<0.0001)
+//			sensor_value[k]=0.00;
+//		else 
+//			sensor_value[k] += 0.05;
+		if(sensor_center[k].sensor_value < 0.0001)
+			sensor_center[k].sensor_value = 0.00;
+		else
+			sensor_center[k].sensor_value += 0.05;
+		
 		temp_buffer[k] = 0.0;
 	}
 	
@@ -79,7 +115,7 @@ static rt_err_t sensor_deal()
 
 static void ad7739_thread_entry(void *parameter)
 {
-
+	
 	while(1)
 	{
 		sensor_filt();
