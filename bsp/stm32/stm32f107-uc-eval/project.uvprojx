@@ -468,14 +468,24 @@
               <FilePath>applications\main.c</FilePath>
             </File>
             <File>
-              <FileName>AI_sensor.c</FileName>
+              <FileName>FM25CL64.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\applications\AI_sensor.c</FilePath>
+              <FilePath>.\applications\FM25CL64.c</FilePath>
+            </File>
+            <File>
+              <FileName>f_ram.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\applications\f_ram.c</FilePath>
             </File>
             <File>
               <FileName>AD7739.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\applications\AD7739.c</FilePath>
+            </File>
+            <File>
+              <FileName>AI_sensor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\applications\AI_sensor.c</FilePath>
             </File>
           </Files>
         </Group>

@@ -137,7 +137,7 @@ void HAL_UART_MspInit(UART_HandleTypeDef* huart)
     __HAL_AFIO_REMAP_USART2_ENABLE();
 
     /* USART2 interrupt Init */
-    HAL_NVIC_SetPriority(USART2_IRQn, 0, 1);
+    HAL_NVIC_SetPriority(USART2_IRQn, 0, 2);
     HAL_NVIC_EnableIRQ(USART2_IRQn);
   /* USER CODE BEGIN USART2_MspInit 1 */
 
@@ -206,7 +206,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
 		HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 			
 		/* SPI1 interrupt Init */
-		HAL_NVIC_SetPriority(SPI1_IRQn, 0, 1);
+		HAL_NVIC_SetPriority(SPI1_IRQn, 0, 2);
 		HAL_NVIC_EnableIRQ(SPI1_IRQn);
 	}
 	else if(hspi->Instance==SPI2)
@@ -231,7 +231,7 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef *hspi)
 		HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 			
 		/* SPI1 interrupt Init */
-		HAL_NVIC_SetPriority(SPI2_IRQn, 0, 1);
+		HAL_NVIC_SetPriority(SPI2_IRQn, 0, 2);
 		HAL_NVIC_EnableIRQ(SPI2_IRQn);
 	}
 }
