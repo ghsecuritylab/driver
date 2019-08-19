@@ -3,6 +3,9 @@
 
 #include <board.h>
 
+#define adc_point 100.0	//定义通道参数设置时，数值放大倍数
+#define sensor_point 100.0 //传感器数据小数点后的精度
+
 /***define sensor struct***/
 typedef struct ad_sensor
 {

@@ -9,6 +9,7 @@ extern ad_sensor sensor_center[12];
 
 static fm25cl64_t dev; 
 
+/*
 float value[48] = { 1.0	 ,0.0  ,1200.0 ,0.0 ,
 					1.0	 ,0.0  ,1200.0 ,0.0 , 
 					1.0	 ,0.0  ,1200.0 ,0.0 ,
@@ -21,6 +22,20 @@ float value[48] = { 1.0	 ,0.0  ,1200.0 ,0.0 ,
 					1.0	 ,0.0  ,1200.0 ,0.0 ,
 					1.0	 ,0.0  ,1200.0 ,0.0 ,
 					1.0	 ,0.0  ,1200.0 ,0.0 , };
+*/
+rt_uint32_t value[48] = { 105	 ,0  ,120000 ,0 ,
+						  106	 ,0  ,120000 ,0 , 
+						  107	 ,0  ,120000 ,0 ,
+						  108	 ,0  ,120000 ,0 ,
+						  109	 ,0  ,120000 ,0 ,
+						  105	 ,0  ,120000 ,0 ,
+						  105	 ,0  ,120000 ,0 ,
+						  105	 ,0  ,120000 ,0 ,
+						  108	 ,0  ,120000 ,0 ,
+						  105	 ,0  ,120000 ,0 ,
+						  105	 ,0  ,120000 ,0 ,
+						  110	 ,0  ,120000 ,0 , };
+
 
 /*
 * reverse the byte order 
@@ -40,8 +55,9 @@ static void byte_reverse(rt_uint32_t *data)
 * crc-32/MPEG-2 check
 * first check : crc = 0xffffffff
 */
-static rt_uint32_t crc32(rt_uint8_t *buffer,rt_uint8_t length,rt_uint32_t crc)
+static rt_uint32_t crc32(rt_uint8_t *buffer,rt_uint8_t length)
 {
+	rt_uint32_t crc = 0xffffffff;
 	for(int i=0;i<length;i++)
 	{
 		crc ^= (*buffer++ <<24);
@@ -62,25 +78,26 @@ static rt_uint32_t crc32(rt_uint8_t *buffer,rt_uint8_t length,rt_uint32_t crc)
 }
 
 /*
-* 
+* 当 ADC 通道参数更改时调用
+* 计算更改后的整体数据 CRC，并写入
+* 重新读取并校验
 */
 rt_err_t update_crc(void)
 {
-	float buffer[48];
-	rt_uint32_t new_crc,crc_test = 0;
-	
-	fm25cl64_MemoryRead(dev,0x1800,buffer,192);//从F_RAM读取数据
-	new_crc = crc32((rt_uint8_t *)buffer,192,0xffffffff);//计算新数据的 crc
-	crc_test = new_crc;
+	rt_uint32_t buffer[49] = {0};
+
+	fm25cl64_MemoryRead(dev,0x1800,buffer,192);//从 F_RAM 读取通道参数
+	buffer[48] = crc32((rt_uint8_t *)buffer,192);//计算新数据的 crc
 	
 	fm25cl64_WRSR(dev,&fm_unprotect);//取消写保护
-	byte_reverse((rt_uint32_t*)&new_crc);//反转crc校验码的高低位顺序（keil小端模式）
-	fm25cl64_MemoryWrite(dev,CRC_VALUE,&new_crc,4);//写入数据的CRC校验码
+	byte_reverse((rt_uint32_t*)&buffer[48]);//反转 crc 校验码的高低位顺序（keil小端模式）
+	fm25cl64_MemoryWrite(dev,CRC_VALUE,&buffer[48],4);//写入新的 crc 校验码
 	fm25cl64_WRSR(dev,&fm_protect);//开启写保护
 	
-	fm25cl64_MemoryRead(dev,CRC_VALUE,&new_crc,4);//读取CRC进行校验
-	if(!crc32((rt_uint8_t*)&new_crc,4,crc_test))
+	fm25cl64_MemoryRead(dev,0x1800,buffer,196);//从 F_RAM 读取数据和校验码
+	if(crc32((rt_uint8_t *)buffer,196)==0)//通道参数与校验码一起校验
 	{
+		rt_kprintf("F_RAM new value store success!\n");
 		return RT_EOK;//校验成功
 	}
 	return RT_ERROR;//校验失败
@@ -89,51 +106,47 @@ rt_err_t update_crc(void)
 /*
 * 把默认定义的数据写入铁电
 */
-static void default_write()
+static void default_write(void)
 {	
-	fm25cl64_WRSR(dev,&fm_unprotect);
-	fm25cl64_MemoryWrite(dev,0x1800,value,192);
-	fm25cl64_WRSR(dev,&fm_protect);
+	fm25cl64_WRSR(dev,&fm_unprotect);//取消写保护
+	fm25cl64_MemoryWrite(dev,0x1800,value,192);//写入默认设置的参数，48个值
+	fm25cl64_WRSR(dev,&fm_protect);//开启写保护
 }
-
 
 /*
 * 将读取的数据按规则存入传感数组
 */
-static rt_err_t data_set(float *buffer)
+static rt_err_t data_set(rt_uint32_t *buffer)
 {
 	for(int i=0;i<12;i++)
 	{
-		sensor_center[i].radio = *buffer++;
-		sensor_center[i].offset = *buffer++;
-		sensor_center[i].full = *buffer++;
-		sensor_center[i].zero = *buffer++;
+		sensor_center[i].radio = *buffer++/adc_point;
+		sensor_center[i].offset = *buffer++/adc_point;
+		sensor_center[i].full = *buffer++/adc_point;
+		sensor_center[i].zero = *buffer++/adc_point;
 	}
 	return RT_EOK;
 }
 
 static void fm_entry(void *parameter)
 {	
-	float buffer[48] = {0};
-	rt_uint32_t crc_value = 0;//查看存储进去的数据
-	rt_uint32_t crc_check = 0;
+	rt_uint32_t buffer[49] = {0};//0~47存通道参数，48存crc校验值
+		
+	fm25cl64_MemoryRead(dev,0x1800,buffer,196);//从F_RAM读取数据
 	
-	fm25cl64_MemoryRead(dev,0x1800,buffer,192);//从F_RAM读取数据
-	fm25cl64_MemoryRead(dev,CRC_VALUE,&crc_value,4);
-	
-	crc_check = crc32((rt_uint8_t *)buffer,192,0xffffffff);
-	if(crc32((rt_uint8_t *)&crc_value,4,crc_check))//从F_RAM读取的数据校验失败
+	if(crc32((rt_uint8_t*)buffer,196)!=0)//从F_RAM读取的数据校验失败
 	{
+		rt_uint32_t crc = 0;
+		
 		default_write();//写入所有传感器数据
-		crc_check = crc32((rt_uint8_t*)value,192,0xffffffff);//得到数据的CRC校验码
-		crc_value = crc_check;
+		crc = crc32((rt_uint8_t*)value,192);//得到数据的CRC校验码
 		fm25cl64_WRSR(dev,&fm_unprotect);//取消写保护
-		byte_reverse((rt_uint32_t*)&crc_value);//反转crc校验码的高低位顺序（keil小端模式）
-		fm25cl64_MemoryWrite(dev,CRC_VALUE,&crc_value,4);//写入数据的CRC校验码
+		byte_reverse((rt_uint32_t*)&crc);//反转CRC校验码的高低位顺序（keil小端模式）
+		fm25cl64_MemoryWrite(dev,CRC_VALUE,&crc,4);//写入数据的CRC校验码
 		fm25cl64_WRSR(dev,&fm_protect);//开启写保护
 		
-		fm25cl64_MemoryRead(dev,CRC_VALUE,&crc_value,4);//读取CRC进行校验
-		if(crc32((rt_uint8_t *)&crc_value,4,crc_check))//新写入数据校验失败
+		fm25cl64_MemoryRead(dev,0x1800,buffer,196);//从F_RAM读取数据
+		if(crc32((rt_uint8_t*)buffer,196)!=0)//新写入数据校验失败
 		{
 			rt_kprintf("FM data check error!\n");
 		}
@@ -141,17 +154,16 @@ static void fm_entry(void *parameter)
 		{
 			rt_kprintf("FM data check ok!\n");
 		}
-		fm25cl64_MemoryRead(dev,0x1800,buffer,192);//重新从F_RAM读取数据
 	}
 
 	data_set(buffer);//读取的数据分配给传感中心结构体数组
 	
 	while(1)
 	{
-		crc_check = 0;
 		fm25cl64_WRSR(dev,&fm_unprotect);//取消写保护
-		fm25cl64_MemoryWrite(dev,CRC_VALUE,&crc_check,4);//写入数据的CRC校验码
+		fm25cl64_MemoryWrite(dev,CRC_VALUE,buffer,4);//写入数据的CRC校验码
 		fm25cl64_WRSR(dev,&fm_protect);//开启写保护
+		
 		rt_thread_delay(1000);
 	}
 }

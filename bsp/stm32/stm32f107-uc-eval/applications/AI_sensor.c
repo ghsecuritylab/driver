@@ -36,7 +36,7 @@ static rt_err_t sensor_update()
 				temp = temp<<8|adc_channel_value[j]; 
 			}
 			
-			sensor_center[i].sensor_value = (float)(temp*5)/0xffffff;
+			sensor_center[i].sensor_value = temp;//(float)(temp*5)/0xffffff;
 			temp = 0;
 		}
 		return RT_EOK;
@@ -48,14 +48,15 @@ static rt_err_t sensor_update()
 }
 
 /*
-* 传感器数据十次平均滤波
+* 传感器数据平均滤波
+* filt_num : 滤波次数
 */
-static rt_err_t sensor_filt()
+static rt_err_t sensor_filt(rt_uint8_t filt_num)
 {
-	float temp_buffer[12] = {0.0};
+	rt_uint32_t temp_buffer[12] = {0.0};
 	
 	/********filt by adding ten value********/
-	for(int i=0;i<10;i++)
+	for(int i=0;i<filt_num;i++)
 	{
 		sensor_update();//Update sensor value
 		
@@ -68,15 +69,19 @@ static rt_err_t sensor_filt()
 	/**********get average value***********/
 	for(int k=0;k<12;k++)
 	{
-		sensor_center[k].sensor_value = (temp_buffer[k]/10.0)
+		int adc_tr = 0;
+		sensor_center[k].sensor_value = (temp_buffer[k]*5.0/filt_num/0xffffff)//5V电压范围
 										* sensor_center[k].radio	// Multi radio value
 										+ sensor_center[k].offset;	// Add offset value
 		
-		/*discard the extra low value*/
-		if(sensor_center[k].sensor_value < 0.0001)
-			sensor_center[k].sensor_value = 0.00;
+		adc_tr = sensor_center[k].sensor_value*sensor_point+0.5;//最后一位 四舍五入
+		sensor_center[k].sensor_value = adc_tr/sensor_point;
 		
-		temp_buffer[k] = 0.0;
+		/*discard the extra low value*/
+		if(sensor_center[k].sensor_value < 0.01)
+			sensor_center[k].sensor_value = 0.0;
+		
+		temp_buffer[k] = 0;
 	}
 	
 	return RT_EOK;
@@ -85,10 +90,12 @@ static rt_err_t sensor_filt()
 
 static void ad7739_thread_entry(void *parameter)
 {
-	
+	rt_uint16_t data;
 	while(1)
 	{
-		sensor_filt();
+		sensor_filt(10);
+		data = sensor_center[0].sensor_value*100;
+		rt_kprintf("通道值:%d\n",data);
 		rt_thread_delay(500);
 	}
 }
