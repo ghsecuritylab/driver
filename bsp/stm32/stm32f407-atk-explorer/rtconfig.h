@@ -81,19 +81,15 @@
 #define RT_USING_SERIAL
 #define RT_SERIAL_USING_DMA
 #define RT_SERIAL_RB_BUFSZ 64
+#define RT_USING_HWTIMER
 #define RT_USING_PIN
-
-/* Using Hardware Crypto drivers */
-
-
-/* Using WiFi */
-
 
 /* Using USB */
 
 
 /* POSIX layer and C standard library */
 
+#define RT_LIBC_USING_TIME
 
 /* Network */
 
@@ -104,9 +100,6 @@
 
 
 /* light weight TCP/IP stack */
-
-
-/* Modbus master and slave stack */
 
 
 /* AT commands */
@@ -151,6 +144,8 @@
 
 /* peripheral libraries and drivers */
 
+/* sensors drivers */
+
 
 /* miscellaneous packages */
 
@@ -173,6 +168,13 @@
 #define BSP_USING_GPIO
 #define BSP_USING_UART
 #define BSP_USING_UART1
+#define BSP_UART1_RX_USING_DMA
+#define BSP_UART1_TX_USING_DMA
+#define BSP_USING_UART2
+#define BSP_UART2_RX_USING_DMA
+#define BSP_UART2_TX_USING_DMA
+#define BSP_USING_TIM
+#define BSP_USING_TIM13
 
 /* Board extended module Drivers */
 
