@@ -477,6 +477,16 @@
               <FileType>1</FileType>
               <FilePath>.\applications\led_sample.c</FilePath>
             </File>
+            <File>
+              <FileName>key_sample.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\applications\key_sample.c</FilePath>
+            </File>
+            <File>
+              <FileName>key_scan.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\applications\key_scan.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

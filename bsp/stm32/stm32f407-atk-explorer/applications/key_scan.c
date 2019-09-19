@@ -13,12 +13,10 @@
 
 static 	rt_timer_t scan = RT_NULL;//定时器句柄
 
-static rt_uint8_t key_value[key_amount]={0};//按键功能存储数组
+static rt_uint8_t key_value[key_amount+1]={0};//按键功能存储数组
 
 static rt_uint32_t pin_status = 0;//当前按键引脚状态，32位标识32个按键
-static rt_err_t press_num = 0;//记录事件按键的索引号
-static int mode = 0;//扫描模式：0-->全键扫描	1-->单键扫描
-
+static rt_err_t state=0;//状态机状态
 struct key_struct key_creat =
 {
 	.parent = 0,
@@ -164,7 +162,7 @@ rt_err_t rt_hw_key_init(void)
 */
 static rt_err_t find_keyevent(rt_err_t num)
 {
-	static rt_err_t state=0, cont=0, press_time=0;
+	static rt_err_t cont=0, press_time=0;
 	rt_err_t key_return = KEY_NO;
 	
 	switch(state)
@@ -204,7 +202,6 @@ static rt_err_t find_keyevent(rt_err_t num)
 				if(!key_value[num])
 					key_value[num]=3;
 				state = 0;
-				mode = 0;
 			}
 		break;
 		
@@ -214,7 +211,6 @@ static rt_err_t find_keyevent(rt_err_t num)
 				if(++press_time==DEBOUNCE_TICK)
 				{
 					state = 0;
-					mode = 0;
 					key_return = KEY_DOUBLE;
 					if(!key_value[num])
 						key_value[num]=2;
@@ -224,7 +220,6 @@ static rt_err_t find_keyevent(rt_err_t num)
 			{
 				press_time = 0;
 				key_return = KEY_CLICK;//返回单击
-				mode = 0;
 				state = 0;
 				if(!key_value[num])
 					key_value[num]=1;
@@ -248,7 +243,7 @@ static rt_err_t find_keyevent(rt_err_t num)
 static rt_err_t key_check(rt_uint32_t *old_state)
 {
 	rt_uint32_t pin_stable=0;
-	for(int i=0;i<3;i++)//轮询检测按键状态
+	for(int i=0;i<key_amount;i++)//轮询检测按键状态
 	{
 		if(rt_pin_read(pin_list[i])==0)//如果对应按键被按下
 		{
@@ -275,7 +270,7 @@ static rt_err_t key_check(rt_uint32_t *old_state)
 */
 static rt_err_t get_eventkey(rt_uint32_t state)
 {
-	for(int i=0;i<3;i++)
+	for(int i=0;i<key_amount;i++)
 	{
 		if(state&(1<<i))
 			return i;//返回按键在数组中的序号
@@ -308,7 +303,11 @@ static rt_err_t print_key(rt_uint32_t *state)
 */
 static void scan_entry(void *parameter)
 {
-	static rt_uint32_t key_cont=0;
+	static int mode = 0;//扫描模式：0-->全键扫描	1-->单键扫描
+	static rt_err_t press_num = 0;//记录事件按键的索引号
+	
+	if(pin_status==0)
+		mode=0;
 	
 	if(mode==0)//模式0：扫描所有按键
 	{
@@ -320,10 +319,9 @@ static void scan_entry(void *parameter)
 	}
 	else if(mode==1)
 	{
-		key_cont = find_keyevent(press_num);
-		if(key_cont)
+		if(find_keyevent(press_num))//按键结果被识别
 		{
-			rt_kprintf("Resault is %d\n",key_cont);
-		}
+			mode =0;
+		}	
 	}
 }

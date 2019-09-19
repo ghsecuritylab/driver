@@ -3,7 +3,7 @@
 #include <rtdevice.h>
 #include <key_scan.h>
 
-rt_uint8_t value[key_amount] = {0};
+rt_uint8_t value[key_amount+1] = {0};
 
 void sample_entry(void *parameter)
 {
@@ -19,9 +19,9 @@ void sample_entry(void *parameter)
 	
 	while(1)
 	{
-		rt_device_read(dev,0,value,key_amount);
+		rt_device_read(dev,0,value,key_amount+1);
 		
-		rt_kprintf("%d %d %d",value[0],value[1],value[2]);
+		rt_kprintf("%d %d %d",value[0],value[1],value[2],value[3]);
 		
 		rt_thread_delay(2000);
 	}
