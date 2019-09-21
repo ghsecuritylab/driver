@@ -87,14 +87,13 @@ static rt_err_t sensor_filt(rt_uint8_t filt_num)
 	return RT_EOK;
 }
 
-
 static void ad7739_thread_entry(void *parameter)
 {
 	rt_uint16_t data;
 	while(1)
 	{
 		sensor_filt(10);
-		data = sensor_center[0].sensor_value*100;
+		data = sensor_center[9].sensor_value*100;
 		rt_kprintf("Õ®µ¿÷µ:%d\n",data);
 		rt_thread_delay(500);
 	}
