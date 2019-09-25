@@ -3,6 +3,8 @@
 
 #include <board.h>
 
+#define RS485	GET_PIN(G, 8)
+
 #define	SLAVE	0x01	//从机站号
 #define Message_MAX	512	//定义一帧数据接收最大字节数
 

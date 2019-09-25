@@ -3,7 +3,6 @@
 #include <rtdevice.h>
 #include <modbus.h>
 
-#define RS485	GET_PIN(G, 8)
 static rt_device_t dev;//串口设备
 static struct MODBUS_timer RS485_timer;//定时器结构体
 static rt_sem_t rs485_lock = RT_NULL;//MODBUS 协议锁
