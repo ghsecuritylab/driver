@@ -42,12 +42,12 @@ rt_err_t fm25cl64_RDSR(fm25cl64_t device,void *buffer)//¶Á FM25CL64 ×´Ì¬¼Ä´æÆ÷
 * 	@param	*buffer	: point of the value buffer
 * return 		: RT_EOK
 */
-rt_err_t fm25cl64_WRSR(fm25cl64_t device,void *buffer)//Ğ´ FM25CL64 ×´Ì¬¼Ä´æÆ÷
+rt_err_t fm25cl64_WRSR(fm25cl64_t device,rt_uint8_t buffer)//Ğ´ FM25CL64 ×´Ì¬¼Ä´æÆ÷
 {
 	rt_uint8_t cmd = WREN;
 	rt_spi_send(device->parent,&cmd,1);
 	cmd = WRSR;
-	rt_spi_send_then_send(device->parent,&cmd,1,buffer,1);
+	rt_spi_send_then_send(device->parent,&cmd,1,&buffer,1);
 	cmd = WRDI;
 	rt_spi_send(device->parent,&cmd,1);
 	return RT_EOK;
