@@ -27,7 +27,7 @@ void sample_entry(void *parameter)
 	}
 }
 
-int sample(void)
+int key_sample(void)
 {
 	
 	rt_hw_key_init();
@@ -44,4 +44,4 @@ int sample(void)
 	
 	return RT_EOK;
 }
-INIT_APP_EXPORT(sample);
+MSH_CMD_EXPORT(key_sample , key test);

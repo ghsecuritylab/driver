@@ -468,9 +468,14 @@
               <FilePath>applications\main.c</FilePath>
             </File>
             <File>
-              <FileName>modbus.c</FileName>
+              <FileName>key_driver.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\applications\modbus.c</FilePath>
+              <FilePath>.\applications\key_driver.c</FilePath>
+            </File>
+            <File>
+              <FileName>key_menu.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\applications\key_menu.c</FilePath>
             </File>
           </Files>
         </Group>

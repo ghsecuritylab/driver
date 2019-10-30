@@ -76,8 +76,7 @@ static rt_err_t stm32_key_open(struct rt_device *dev, rt_uint16_t oflag)
 	else
 	{
 		return RT_ERROR;
-	}
-	
+	}	
 }
 
 /*
