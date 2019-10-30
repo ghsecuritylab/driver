@@ -9,9 +9,8 @@
 #include <drv_log.h>
 
 /*
-* 函数名称：
-* 函数功能：
-* 
+* 函数名称：ad7739_reset
+* 函数功能：复位AD7739设备
 */
 void ad7739_reset(AD7739_t device)
 {
