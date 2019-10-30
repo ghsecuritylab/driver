@@ -9,10 +9,10 @@
 /**********default config***********/
 const static rt_uint8_t AD7739_Config[4] =
 {
-	0x38,	//IO_PORT_VALUE
-	0x0D,	//CHANNEL_SET_VALUE
+	0x38,	//IO_PORT_VALUE			
+	0x0D,	//CHANNEL_SET_VALUE		参考电压：2.5V，通道连续转换
 	0x91,	//CHANNEL_CONV_TIME
-	0x22,	//MODE_SET_VALUE
+	0x22,	//MODE_SET_VALUE		连续转换模式，24位模式
 };		
 
 

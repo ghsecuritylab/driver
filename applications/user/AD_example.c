@@ -5,21 +5,21 @@
 
 static AD7739_t dev;
 
-void sample_entry(void *parameter)
+void AD_test()
 {
 	rt_uint8_t cmd;
 	rt_uint8_t buffer[24];
-	
-	while(1)
-	{
-		ad7739_read(dev,AD7739_REV,&cmd,1);
-		ad7739_channel_read(dev,buffer,3);
-	
-		rt_thread_delay(1000);
-	}
-}
 
-int adc_sample(void)
+	ad7739_read(dev,AD7739_REV,&cmd,1);
+	rt_kprintf("%02X\n",cmd);
+	
+	ad7739_channel_read(dev,buffer,3);
+	rt_kprintf("%s\n",buffer);
+	
+}
+MSH_CMD_EXPORT(AD_test,test ad device read);
+	
+void AD_init(void)
 {
 	dev = rt_calloc(1,sizeof(struct AD7739));
 	
@@ -30,15 +30,6 @@ int adc_sample(void)
 	
 	ad7739_init("spi1",dev,GPIOB,GPIO_PIN_5);
 	
-	{
-		rt_thread_t tid;
-		
-		tid = rt_thread_create("adc_task",sample_entry,RT_NULL,1024,8,20);
-		
-		if(tid != RT_NULL)
-			rt_thread_startup(tid);
-	}
-	return RT_EOK;
 }
-MSH_CMD_EXPORT(adc_sample, ad7739 device init);
+MSH_CMD_EXPORT(AD_init, ad7739 device init);
 
