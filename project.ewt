@@ -2385,6 +2385,9 @@
             <file>
                 <name>$PROJ_DIR$\applications\user\FM_example.c</name>
             </file>
+            <file>
+                <name>$PROJ_DIR$\applications\user\W25Q256FV.c</name>
+            </file>
         </group>
         <file>
             <name>$PROJ_DIR$\applications\main.c</name>
