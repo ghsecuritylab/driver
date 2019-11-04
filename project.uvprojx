@@ -467,6 +467,11 @@
               <FileType>1</FileType>
               <FilePath>.\applications\user\W25Q256FV.c</FilePath>
             </File>
+            <File>
+              <FileName>W25Q_example.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\applications\user\W25Q_example.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
