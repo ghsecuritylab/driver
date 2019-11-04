@@ -70,15 +70,13 @@ struct W25Q256
 {
 	char *name;
 	struct rt_spi_device *spi_device;
-	GPIO_TypeDef *gpiox;
-	uint16_t gpio_pin;
 };
 typedef struct W25Q256 *W25Q256_t;
 
 
-rt_size_t W25Q256_Protect(W25Q256_t dev,lock_area range);
-rt_size_t W25Q256_flash_read(rt_device_t dev,rt_off_t pos,void* buffer,rt_size_t size);
-rt_size_t W25Q256_flash_write(rt_device_t dev, rt_off_t pos,const void* buffer,rt_size_t size);
-rt_err_t W25Q256_init(W25Q256_t dev,const char *spi_bus);
+void W25Q256_Protect(W25Q256_t dev,lock_area range);
+rt_size_t W25Q256_flash_read(W25Q256_t dev,rt_off_t pos,void* buffer,rt_size_t size);
+rt_size_t W25Q256_flash_write(W25Q256_t dev, rt_off_t pos,rt_uint8_t *buffer,rt_size_t size);
+rt_err_t W25Q256_init(W25Q256_t dev,const char *spi_bus,GPIO_TypeDef *gpiox,uint16_t gpio_pin);
 void W25Q256_Deinit(W25Q256_t dev);
 #endif // w25q256fv.h
