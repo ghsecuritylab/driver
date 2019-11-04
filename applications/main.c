@@ -13,13 +13,16 @@
 #include <board.h>
 
 /* defined the LCD_BLK pin: PD13 */
-#define LCD_BLK    GET_PIN(D, 13)
+#define LCD_BLK		GET_PIN(D, 13)
+#define LCD_BLA		GET_PIN(D, 12);
 
 int main(void)
 {
     int count = 1;
     /* set LCD_BLK pin mode to output */	
     rt_pin_mode(LCD_BLK, PIN_MODE_OUTPUT);	
+	rt_pin_mode(LCD_BLA, PIN_MODE_OUTPUT);
+	rt_pin_write(LCD_BLA, PIN_HIGH);
 	
     while (count++)
     {
