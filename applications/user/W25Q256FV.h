@@ -6,6 +6,11 @@
 
 #define Sector_Total	8192	//W25Q256FV 扇区序号最大值，origin from 0
 
+/* ===== Default Status Config ==== */
+#define status1 0x00
+#define status2 0x00
+#define status3 0x42
+
 /* ==== Addr range (four Byte) ==== */
 #define addr_min 0x00000000
 #define addr_max 0x01FFFFFF
@@ -51,10 +56,22 @@ typedef enum 	//default case: TB= 0; WPS = 0; CMP = 0
 	W25Q_TOP256	= 0x24				// 01000000h - 01FFFFFFh,16M  Upper 1/2
 }lock_area;
 
+struct W25Q256_info
+{
+	rt_uint8_t M_id;		// Manufacturer Identification
+	rt_uint16_t D_id;		// Device Identification
+	rt_uint32_t capacity;	// Based on byte
+	rt_uint16_t page_size;	// Based on byte
+	rt_uint32_t sector_size;// Based on byte
+	rt_uint32_t block_size; // Based on byte
+};
+
 struct W25Q256
 {
-	struct rt_spi_device *flash_device;
-	
+	char *name;
+	struct rt_spi_device *spi_device;
+	GPIO_TypeDef *gpiox;
+	uint16_t gpio_pin;
 };
 typedef struct W25Q256 *W25Q256_t;
 

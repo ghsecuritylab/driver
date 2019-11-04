@@ -2374,18 +2374,6 @@
         <group>
             <name>user</name>
             <file>
-                <name>$PROJ_DIR$\applications\user\AD7739.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\applications\user\AD_example.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\applications\user\FM25CL64.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\applications\user\FM_example.c</name>
-            </file>
-            <file>
                 <name>$PROJ_DIR$\applications\user\W25Q256FV.c</name>
             </file>
         </group>
@@ -2438,10 +2426,19 @@
             <name>$PROJ_DIR$\rt-thread\components\drivers\serial\serial.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\rt-thread\components\drivers\spi\sfud\src\sfud.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\rt-thread\components\drivers\spi\sfud\src\sfud_sfdp.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\rt-thread\components\drivers\spi\spi_core.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\rt-thread\components\drivers\spi\spi_dev.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\rt-thread\components\drivers\spi\spi_flash_sfud.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\rt-thread\components\drivers\src\waitqueue.c</name>
