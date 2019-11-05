@@ -463,14 +463,14 @@
               <FilePath>applications\main.c</FilePath>
             </File>
             <File>
-              <FileName>W25Q256FV.c</FileName>
+              <FileName>LCD.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\applications\user\W25Q256FV.c</FilePath>
+              <FilePath>.\applications\user\LCD.c</FilePath>
             </File>
             <File>
-              <FileName>W25Q_example.c</FileName>
+              <FileName>LCD_example.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\applications\user\W25Q_example.c</FilePath>
+              <FilePath>.\applications\user\LCD_example.c</FilePath>
             </File>
           </Files>
         </Group>

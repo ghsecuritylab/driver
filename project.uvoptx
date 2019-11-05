@@ -359,7 +359,7 @@
 
   <Group>
     <GroupName>Applications</GroupName>
-    <tvExp>0</tvExp>
+    <tvExp>1</tvExp>
     <tvExpOptDlg>0</tvExpOptDlg>
     <cbSel>0</cbSel>
     <RteFlg>0</RteFlg>
@@ -382,8 +382,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\applications\user\W25Q256FV.c</PathWithFileName>
-      <FilenameWithoutPath>W25Q256FV.c</FilenameWithoutPath>
+      <PathWithFileName>.\applications\user\LCD.c</PathWithFileName>
+      <FilenameWithoutPath>LCD.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -394,8 +394,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\applications\user\W25Q_example.c</PathWithFileName>
-      <FilenameWithoutPath>W25Q_example.c</FilenameWithoutPath>
+      <PathWithFileName>.\applications\user\LCD_example.c</PathWithFileName>
+      <FilenameWithoutPath>LCD_example.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
