@@ -39,7 +39,10 @@ void W25Q_init()
 	}
 	dev->name = "W25Q256";
 	if(W25Q256_init(dev,"spi4",GPIOE,GPIO_PIN_4)!=RT_EOK)
+	{
+		W25Q256_Deinit(dev);
 		rt_kprintf("W25Q init falied!\n");
+	}
 	else
 		rt_kprintf("W25Q init success!\n");
 	
