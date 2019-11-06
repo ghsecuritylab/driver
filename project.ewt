@@ -2372,6 +2372,12 @@
     <group>
         <name>Applications</name>
         <group>
+            <name>func</name>
+            <file>
+                <name>$PROJ_DIR$\applications\func\rocker.c</name>
+            </file>
+        </group>
+        <group>
             <name>user</name>
             <file>
                 <name>$PROJ_DIR$\applications\user\LCD.c</name>

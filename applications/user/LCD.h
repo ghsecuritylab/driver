@@ -83,7 +83,7 @@ typedef struct lcd *lcd_t;
 void lcd_DrawPoint(lcd_t dev,rt_uint16_t x,rt_uint16_t y,rt_uint16_t color);
 void lcd_DrawLine(lcd_t dev,rt_uint16_t x0,rt_uint16_t y0,rt_uint16_t x1,rt_uint16_t y1,rt_uint16_t color);
 void lcd_FillRect(lcd_t dev,rt_uint16_t x,rt_uint16_t y,rt_uint16_t length,rt_uint16_t width,rt_uint16_t color);
-rt_err_t lcd_write(lcd_t dev,rt_uint8_t value);
+
 rt_err_t lcd_init(lcd_t dev,const char *spi_bus,GPIO_TypeDef *GPIOx,uint16_t GPIO_Pin);
 void lcd_Deinit(lcd_t dev);
 

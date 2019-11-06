@@ -6,6 +6,8 @@
 #define LOG_TAG	"LCD2.44"
 #include <drv_log.h>
 
+static rt_uint16_t color = RED;	//默认字体颜色为红色
+
 /*
 * 函数名称：lcd_CtrlIn
 * 函数说明：向LCD写入控制指令
@@ -95,15 +97,12 @@ void lcd_FillRect(lcd_t dev,rt_uint16_t x,rt_uint16_t y,rt_uint16_t length,rt_ui
 	}
 }
 
-rt_err_t lcd_write(lcd_t dev,rt_uint8_t value)
-{
 
-	lcd_CtrlIn(dev,0x51);
-	lcd_DataIn(dev,value);
-	
-	return RT_EOK;
-}
 
+/*
+* 函数名称：lcd_init
+* 函数功能：根据指定的片选引脚和SPI总线初始化设备
+*/
 rt_err_t lcd_init(lcd_t dev,const char *spi_bus,GPIO_TypeDef *GPIOx,uint16_t GPIO_Pin)
 {
 	/*			init lcd pin			*/
@@ -132,21 +131,21 @@ rt_err_t lcd_init(lcd_t dev,const char *spi_bus,GPIO_TypeDef *GPIOx,uint16_t GPI
 	
 	/*			reset lcd device		*/
 	rt_pin_write(dev->rst_pin,PIN_LOW);
-	rt_thread_delay(1000);// reset wait for 1s
+	rt_thread_delay(10);// reset wait for 1s
 	rt_pin_write(dev->rst_pin,PIN_HIGH);
+	rt_thread_delay(800);// reset wait for 800ms
 	
 	/*			turn on lcd	device		*/
 	rt_pin_write(dev->bla_pin,PIN_HIGH);
 	
-	lcd_CtrlIn(dev,SLPOUT);//退出睡眠
-	rt_thread_delay(200);
-	lcd_CtrlIn(dev,MRACTL);
+	lcd_CtrlIn(dev,SLPOUT);// 退出睡眠
+	rt_thread_delay(150);
+	lcd_CtrlIn(dev,MRACTL);// RAM 格式
 	lcd_DataIn(dev,0x60);
-	lcd_CtrlIn(dev,COLMOD);
+	lcd_CtrlIn(dev,COLMOD);// 色彩格式
 	lcd_DataIn(dev,0x55);
-	lcd_CtrlIn(dev,0x29);
-	lcd_FillRect(dev,0,0,239,319,0xffff);
-	
+	lcd_FillRect(dev,0,0,240,320,0xffff);// 清屏，白色
+	lcd_CtrlIn(dev,0x29);  // 开显示
 	return RT_EOK;
 }
 
