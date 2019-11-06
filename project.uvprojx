@@ -54,7 +54,7 @@
           <CreateLib>0</CreateLib>
           <CreateHexFile>0</CreateHexFile>
           <DebugInformation>1</DebugInformation>
-          <BrowseInformation>1</BrowseInformation>
+          <BrowseInformation>0</BrowseInformation>
           <ListingPath>.\build\keil\List\</ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
@@ -283,12 +283,12 @@
                 <Size>0x100000</Size>
               </OCR_RVCT5>
               <OCR_RVCT6>
-                <Type>1</Type>
+                <Type>0</Type>
                 <StartAddress>0x30000000</StartAddress>
                 <Size>0x48000</Size>
               </OCR_RVCT6>
               <OCR_RVCT7>
-                <Type>1</Type>
+                <Type>0</Type>
                 <StartAddress>0x38000000</StartAddress>
                 <Size>0x10000</Size>
               </OCR_RVCT7>
@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER, RT_USING_ARM_LIBC, STM32H743xx</Define>
               <Undefine></Undefine>
-              <IncludePath>.;rt-thread\include;board;board\CubeMX_Config\Inc;board\ports;libraries\HAL_Drivers;libraries\HAL_Drivers\config;rt-thread\libcpu\arm\common;rt-thread\libcpu\arm\cortex-m7;rt-thread\components\drivers\include;rt-thread\components\drivers\include;rt-thread\components\drivers\spi;rt-thread\components\drivers\include;rt-thread\components\drivers\spi\sfud\inc;rt-thread\components\drivers\include;rt-thread\components\finsh;rt-thread\components\libc\compilers\armlibc;rt-thread\components\libc\compilers\common;libraries\STM32H7xx_HAL\STM32H7xx_HAL_Driver\Inc;libraries\STM32H7xx_HAL\CMSIS\Device\ST\STM32H7xx\Include;libraries\STM32H7xx_HAL\CMSIS\Include</IncludePath>
+              <IncludePath>.;rt-thread\include;board;board\CubeMX_Config\Inc;board\ports;libraries\HAL_Drivers;libraries\HAL_Drivers\config;rt-thread\libcpu\arm\common;rt-thread\libcpu\arm\cortex-m7;rt-thread\components\drivers\include;rt-thread\components\drivers\include;rt-thread\components\drivers\spi;rt-thread\components\drivers\include;rt-thread\components\drivers\spi\sfud\inc;rt-thread\components\drivers\include;rt-thread\components\finsh;rt-thread\components\libc\compilers\armlibc;rt-thread\components\libc\compilers\common;libraries\STM32H7xx_HAL\STM32H7xx_HAL_Driver\Inc;libraries\STM32H7xx_HAL\CMSIS\Device\ST\STM32H7xx\Include;libraries\STM32H7xx_HAL\CMSIS\Include;.\applications\user</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -463,14 +463,14 @@
               <FilePath>applications\main.c</FilePath>
             </File>
             <File>
-              <FileName>LCD.c</FileName>
+              <FileName>rocker.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\applications\user\LCD.c</FilePath>
+              <FilePath>.\applications\func\rocker.c</FilePath>
             </File>
             <File>
-              <FileName>LCD_example.c</FileName>
+              <FileName>AD7739.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\applications\user\LCD_example.c</FilePath>
+              <FilePath>.\applications\user\AD7739.c</FilePath>
             </File>
           </Files>
         </Group>

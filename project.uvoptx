@@ -382,8 +382,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\applications\user\LCD.c</PathWithFileName>
-      <FilenameWithoutPath>LCD.c</FilenameWithoutPath>
+      <PathWithFileName>.\applications\func\rocker.c</PathWithFileName>
+      <FilenameWithoutPath>rocker.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>
@@ -394,8 +394,8 @@
       <tvExp>0</tvExp>
       <tvExpOptDlg>0</tvExpOptDlg>
       <bDave2>0</bDave2>
-      <PathWithFileName>.\applications\user\LCD_example.c</PathWithFileName>
-      <FilenameWithoutPath>LCD_example.c</FilenameWithoutPath>
+      <PathWithFileName>.\applications\user\AD7739.c</PathWithFileName>
+      <FilenameWithoutPath>AD7739.c</FilenameWithoutPath>
       <RteFlg>0</RteFlg>
       <bShared>0</bShared>
     </File>

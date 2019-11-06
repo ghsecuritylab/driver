@@ -2380,6 +2380,9 @@
         <group>
             <name>user</name>
             <file>
+                <name>$PROJ_DIR$\applications\user\AD7739.c</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\applications\user\LCD.c</name>
             </file>
             <file>
