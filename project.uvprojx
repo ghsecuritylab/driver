@@ -472,6 +472,11 @@
               <FileType>1</FileType>
               <FilePath>.\applications\user\AD7739.c</FilePath>
             </File>
+            <File>
+              <FileName>button.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\applications\func\button.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

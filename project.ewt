@@ -2374,6 +2374,9 @@
         <group>
             <name>func</name>
             <file>
+                <name>$PROJ_DIR$\applications\func\button.c</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\applications\func\rocker.c</name>
             </file>
         </group>
@@ -2383,10 +2386,13 @@
                 <name>$PROJ_DIR$\applications\user\AD7739.c</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\applications\user\FM25CL64.c</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\applications\user\LCD.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\applications\user\LCD_example.c</name>
+                <name>$PROJ_DIR$\applications\user\W25Q256FV.c</name>
             </file>
         </group>
         <file>
