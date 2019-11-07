@@ -2,7 +2,7 @@
 
 ## 简介
  - 工程基于STM32F743VIT6芯片，使用RT-Thread实时操作系统
- - HES : 25MHz 有源晶振
+ - HSE : 25MHz 有源晶振
  - LSE : 32.768kHz 石英晶振
  
 ## 硬件范围
