@@ -2,14 +2,18 @@
 #include <rtdevice.h>
 #include "AD7739.h"
 
+/**** Useing C Library ****/
+#include <math.h>
+
 #define LOG_TAG	"rocker"
 #include <drv_log.h>
 
 static AD7739_t rocker = RT_NULL;
 static rt_sem_t rocker_lock = RT_NULL; 
 
-rt_uint32_t rocker_buffer[8] = {0};
+static void direction(rt_uint16_t x,rt_uint16_t y);
 
+rt_uint16_t resault[8] = {0};
 
 static void ready(void *args)
 {
@@ -20,6 +24,7 @@ static void rocker_entry(void *parameter)
 {
 	float temp = 0;
 	rt_uint8_t data[24] = {0};
+	rt_uint32_t rocker_buffer[8] = {0};
 	rt_uint8_t flag = 0;
 	while(1)
 	{
@@ -38,16 +43,20 @@ static void rocker_entry(void *parameter)
 			for(int i=0;i<8;i++)// 换算通道结果
 			{
 				temp = rocker_buffer[i] * 5.0 / (1<<24);
-				rocker_buffer[i] = (rt_uint16_t)(temp * 100);
+				resault[i] += (rt_uint16_t)(temp * 100);
+				resault[i] = resault[i] / 2;// 两次相加取均值
 			}
+			
+			if(flag == 50)
+			{
+				flag = 0;//复位计数
+				direction(resault[0],resault[1]);
+/*				rt_kprintf("%d %d %d %d %d %d %d %d\n",// 输出结果
+				   resault[0],resault[1],resault[2],resault[3],
+				   resault[4],resault[5],resault[6],resault[7]);
+*/			}
 		}
-		
-		
-		
-		rt_kprintf("%d %d %d %d %d %d %d %d\n",
-				   rocker_buffer[0],rocker_buffer[1],rocker_buffer[2],rocker_buffer[3],
-				   rocker_buffer[4],rocker_buffer[5],rocker_buffer[6],rocker_buffer[7]);
-		
+		rt_thread_mdelay(10);// 让出CPU 10ms，防止中断长时间占用CPU
 		rt_pin_irq_enable(rocker->ready_pin,PIN_IRQ_ENABLE);//计算结束，开启中断
 	}
 }
@@ -87,10 +96,77 @@ void rocker_init()
 		return;
 	}
 	
-	rt_pin_attach_irq(rocker->ready_pin,PIN_IRQ_MODE_LOW_LEVEL,ready,RT_NULL);
-	rt_pin_irq_enable(rocker->ready_pin,PIN_IRQ_ENABLE);
+	rt_pin_attach_irq(rocker->ready_pin,PIN_IRQ_MODE_FALLING,ready,RT_NULL);//bind ready pin irq
+	rt_pin_irq_enable(rocker->ready_pin,PIN_IRQ_ENABLE);// enable irq
 	
 	rt_thread_startup(tid);
 }
 MSH_CMD_EXPORT(rocker_init,init rocker device);
+
+
+static void direction(rt_uint16_t x,rt_uint16_t y)
+{
+	float Xt,Yt = 0.0;
+	rt_uint16_t r = 0;
+	float arg = 0.0;
+	rt_uint16_t deg = 0;
+	
+	/*	误差范围内认为原点	*/
+	if((x>240)&&(x<260))
+		x = 250;
+	if((y>240)&&(y<260))
+		y = 250;
+	
+	/*	Count Distance From (0,0)	*/
+	Xt = x - 250.0;
+	Yt = y - 250.0;
+	r = (rt_uint16_t)sqrt(Xt*Xt + Yt*Yt);
+	r = r*100/200;// r%
+	if(r>100)
+		r=100;// 限制最大值
+	
+	/*	Angle Translation */
+	arg = atanf(Yt/Xt);
+	arg = fabsf(arg);	// Absolutely Radian Value
+	deg = (rt_uint16_t)(arg*180/3.14); // Angle Value
+	
+	/*		attach position		*/
+	if (x==250)// y轴上
+	{
+		if(y==250)
+		{
+			rt_kprintf("arg:%d ,strangth:%d%\n",0,0);
+		}
+		else if(y>250)
+		{
+			rt_kprintf("arg:%d ,strangth:%d%\n",90,r);
+		}
+		else if(y<250)
+		{
+			rt_kprintf("arg:%d ,strangth:%d%\n",270,r);
+		}
+	}
+	else if(x>250)// x轴正向侧
+	{
+		if(y>=250)//第1象限
+		{
+			rt_kprintf("arg:%d ,strangth:%d%\n",deg,r);
+		}
+		else if(y<250)//第4象限
+		{
+			rt_kprintf("arg:%d ,strangth:%d%\n",360-deg,r);
+		}
+	}
+	else if(x<250)// x轴负向侧
+	{
+		if(y>=250)//第2象限
+		{
+			rt_kprintf("arg:%d ,strangth:%d%\n",180-deg,r);
+		}
+		else if(y<250)//第3象限
+		{
+			rt_kprintf("arg:%d ,strangth:%d%\n",180+deg,r);
+		}
+	}
+}
 
