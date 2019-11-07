@@ -33,4 +33,4 @@ int lcd_example()
 		rt_kprintf("lcd_init ok!\n");
 	return 1;
 }
-INIT_APP_EXPORT(lcd_example);
+MSH_CMD_EXAMPLE(lcd_example,lcd device example);
