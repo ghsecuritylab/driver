@@ -11,14 +11,24 @@
 static AD7739_t rocker = RT_NULL;
 static rt_sem_t rocker_lock = RT_NULL; 
 
-static void direction(rt_uint16_t x,rt_uint16_t y);
+typedef struct{
+	rt_uint16_t deg;
+	rt_uint16_t persent;
+}rocker_s;
 
-rt_uint16_t resault[8] = {0};
+static rocker_s direction(rt_uint32_t x,rt_uint32_t y);
 
+/*
+* AD7739 ready pin irq callback func
+*/
 static void ready(void *args)
 {
 	rt_sem_release(rocker_lock);//释放信号量
 }
+
+/*
+* rocker thread func
+*/
 
 static void rocker_entry(void *parameter)
 {
@@ -26,31 +36,36 @@ static void rocker_entry(void *parameter)
 	rt_uint8_t data[24] = {0};
 	rt_uint32_t rocker_buffer[8] = {0};
 	rt_uint8_t flag = 0;
+	rocker_s resault;
 	while(1)
 	{
 		rt_sem_take(rocker_lock,RT_WAITING_FOREVER);//永久等待信号量
 		rt_pin_irq_enable(rocker->ready_pin,PIN_IRQ_DISABLE);//停止AD7739中断，进行数据运算
 		
 		flag++;
-		if((flag%10)==0)
+		if((flag%10)==0)	
 		{
 			ad7739_channel_read(rocker,data,3);//读所有通道数据
+
 			for(int i=0;i<8;i++)//整合通道数据
 			{
 				int j=i*3;
-				rocker_buffer[i] = (data[j]<<16) | (data[j+1]<<8) | (data[j+2]);
-			}
-			for(int i=0;i<8;i++)// 换算通道结果
-			{
-				temp = rocker_buffer[i] * 5.0 / (1<<24);
-				resault[i] += (rt_uint16_t)(temp * 100);
-				resault[i] = resault[i] / 2;// 两次相加取均值
-			}
+				rocker_buffer[i] += (data[j]<<16) | (data[j+1]<<8) | (data[j+2]);
+			}			
 			
 			if(flag == 50)
 			{
 				flag = 0;//复位计数
-				direction(resault[0],resault[1]);
+				
+				for(int i=0;i<8;i++)// 换算通道结果
+				{
+					temp = rocker_buffer[i] * 1.0 / (1<<24);
+					rocker_buffer[i] = (rt_uint32_t)(temp * 100);
+				}
+				
+				resault = direction(rocker_buffer[0],rocker_buffer[1]);
+				rt_kprintf("deg is:%d;persent is:%d\n",resault.deg,resault.persent);
+				rt_memset(rocker_buffer,0,32);
 /*				rt_kprintf("%d %d %d %d %d %d %d %d\n",// 输出结果
 				   resault[0],resault[1],resault[2],resault[3],
 				   resault[4],resault[5],resault[6],resault[7]);
@@ -104,9 +119,11 @@ void rocker_init()
 MSH_CMD_EXPORT(rocker_init,init rocker device);
 
 
-static void direction(rt_uint16_t x,rt_uint16_t y)
+static rocker_s direction(rt_uint32_t x,rt_uint32_t y)
 {
-	float Xt,Yt = 0.0;
+	rocker_s res;
+	
+	float Xt,Yt = 0.0;	// X轴 、Y轴变化量
 	rt_uint16_t r = 0;
 	float arg = 0.0;
 	rt_uint16_t deg = 0;
@@ -135,38 +152,43 @@ static void direction(rt_uint16_t x,rt_uint16_t y)
 	{
 		if(y==250)
 		{
-			rt_kprintf("arg:%d ,strangth:%d%\n",0,0);
+			r = 0; deg = 0;
 		}
 		else if(y>250)
 		{
-			rt_kprintf("arg:%d ,strangth:%d%\n",90,r);
+			deg = 90;
 		}
 		else if(y<250)
 		{
-			rt_kprintf("arg:%d ,strangth:%d%\n",270,r);
+			deg = 270;
 		}
 	}
 	else if(x>250)// x轴正向侧
 	{
 		if(y>=250)//第1象限
 		{
-			rt_kprintf("arg:%d ,strangth:%d%\n",deg,r);
+			deg = deg;
 		}
 		else if(y<250)//第4象限
 		{
-			rt_kprintf("arg:%d ,strangth:%d%\n",360-deg,r);
+			deg = 360-deg;
 		}
 	}
 	else if(x<250)// x轴负向侧
 	{
 		if(y>=250)//第2象限
 		{
-			rt_kprintf("arg:%d ,strangth:%d%\n",180-deg,r);
+			deg = 180-deg;
 		}
 		else if(y<250)//第3象限
 		{
-			rt_kprintf("arg:%d ,strangth:%d%\n",180+deg,r);
+			deg = 180+deg;
 		}
 	}
+	
+	// Put data into package 
+	res.persent = r;
+	res.deg = deg;
+	return res;
 }
 
