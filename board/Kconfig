@@ -8,23 +8,20 @@ config SOC_STM32H743VI
     default y
 
 menu "Onboard Peripheral Drivers"
-    
-    config BSP_USING_SDRAM
-        bool "Enable SDRAM"
-        select BSP_USING_FMC
+    config BSP_USING_Board_AD
+        bool "Enable AD7739"
+        default n
+	
+    config BSP_USING_Board_FM
+        bool "Enable FM25CL64"
         default n
 
-    config BSP_USING_LCD
-        bool "Enable LCD"
-        select BSP_USING_LTDC
-        select BSP_USING_SDRAM
+    config BSP_USING_Board_LCD
+        bool "Enable LCD 2.44"
         default n
 
-    config BSP_USING_QSPI_FLASH
-        bool "Enable QSPI FLASH (W25Q256 qspi)"
-        select BSP_USING_QSPI
-        select RT_USING_SFUD
-        select RT_SFUD_USING_QSPI
+    config BSP_USING_Board_FLASH
+        bool "Enable W25Q256 FLASH"
         default n
 
 endmenu
@@ -44,6 +41,9 @@ menu "On-chip Peripheral Drivers"
             config BSP_USING_UART1
                 bool "Enable UART1"
                 default y
+            config BSP_USING_UART3
+                bool "Enable UART3"
+                default n
         endif
 
     menuconfig BSP_USING_SPI
@@ -102,7 +102,13 @@ menu "On-chip Peripheral Drivers"
 endmenu
 
 menu "Board extended module Drivers"
-
+	config Board_Using_Rocker
+	bool "Enable Rocker Device"
+	default n
+	
+	config Board_Using_Button
+	bool "Enable Button Device"
+	default n
 endmenu
  
 endmenu
