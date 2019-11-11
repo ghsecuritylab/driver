@@ -1,6 +1,9 @@
 #include <board.h>
 #include <rtdevice.h>
 #include <rtthread.h>
+
+#ifdef BSP_USING_Board_FM
+
 #include <fm25cl64.h>
 #include <drv_spi.h>
 
@@ -130,3 +133,6 @@ void fm25cl64_deinit(fm25cl64_t dev)
 	RT_ASSERT(dev!=RT_NULL);
 	rt_free(dev);
 }
+
+#endif
+

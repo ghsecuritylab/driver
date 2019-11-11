@@ -2,6 +2,8 @@
 #include <rtthread.h>
 #include <rtdevice.h>
 
+#ifdef	BSP_USING_Board_FLASH
+
 #include "w25q256fv.h"
 #include "drv_spi.h"
 #include "drv_log.h"
@@ -218,3 +220,5 @@ void W25Q256_Deinit(W25Q256_t dev)
 	RT_ASSERT(dev);
 	rt_free(dev);// 释放设备内存空间
 }
+
+#endif

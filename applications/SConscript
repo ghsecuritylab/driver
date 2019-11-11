@@ -6,6 +6,11 @@ src     = Split("""
 main.c
 """)
 
+if GetDepend(['Board_Using_Rocker']):
+    src += Glob('func/rocker.c')
+if GetDepend(['Board_Using_Rocker']):
+    src += Glob('func/button.c')
+	
 group = DefineGroup('Applications', src, depend = [''])
 
 Return('group')

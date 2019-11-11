@@ -1,11 +1,13 @@
 #include <board.h>
 #include <rtdevice.h>
 #include <rtthread.h>
+
+#ifdef BSP_USING_Board_AD
+
 #include <ad7739.h>
 #include <drv_spi.h>
 
 #define	LOG_TAG		"AD7739"
-
 #include <drv_log.h>
 
 /*
@@ -131,3 +133,5 @@ void ad7739_deinit(AD7739_t device)
 	RT_ASSERT(device!=RT_NULL);	
 	rt_free(device);
 }
+
+#endif

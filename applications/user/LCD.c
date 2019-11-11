@@ -3,6 +3,8 @@
 #include <drv_spi.h>
 #include "lcd.h"
 
+#ifdef BSP_USING_Board_LCD
+
 #define LOG_TAG	"LCD2.44"
 #include <drv_log.h>
 
@@ -158,3 +160,5 @@ void lcd_Deinit(lcd_t dev)
 	RT_ASSERT(dev!=RT_NULL);
 	rt_free(dev);
 }
+
+#endif
