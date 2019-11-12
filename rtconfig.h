@@ -174,12 +174,17 @@
 
 /* Onboard Peripheral Drivers */
 
+#define BSP_USING_Board_AD
+#define BSP_USING_Board_FM
+#define BSP_USING_Board_LCD
+#define BSP_USING_Board_FLASH
 
 /* On-chip Peripheral Drivers */
 
 #define BSP_USING_GPIO
 #define BSP_USING_UART
 #define BSP_USING_UART1
+#define BSP_USING_UART3
 #define BSP_USING_SPI
 #define BSP_USING_SPI1
 #define BSP_USING_SPI4
@@ -187,5 +192,6 @@
 /* Board extended module Drivers */
 
 #define Board_Using_Rocker
+#define Board_Using_Button
 
 #endif

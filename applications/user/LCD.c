@@ -1,9 +1,10 @@
 #include <rtthread.h>
 #include <rtdevice.h>
 #include <drv_spi.h>
-#include "lcd.h"
 
 #ifdef BSP_USING_Board_LCD
+#include "lcd.h"
+#include "lcd_font.h"
 
 #define LOG_TAG	"LCD2.44"
 #include <drv_log.h>
@@ -39,11 +40,19 @@ static rt_err_t lcd_DataIn(lcd_t dev,rt_uint8_t data)
 }
 
 /*
+* 设置LCD 驱动默认颜色
+*/
+void lcd_ColorSet(rt_uint16_t paint)
+{
+	color = paint;
+}
+
+/*
 * 函数名称：lcd_DrawPoint
 * 函数功能：绘制点
 * 参数描述：x ,y 点的位置；color 点的颜色
 */
-void lcd_DrawPoint(lcd_t dev,rt_uint16_t x,rt_uint16_t y,rt_uint16_t color)
+void lcd_DrawPoint(lcd_t dev,rt_uint16_t x,rt_uint16_t y,rt_uint16_t pen)
 {
 	lcd_CtrlIn(dev,RASET);// 设置行地址
 	lcd_DataIn(dev,x>>8);
@@ -57,18 +66,49 @@ void lcd_DrawPoint(lcd_t dev,rt_uint16_t x,rt_uint16_t y,rt_uint16_t color)
 	lcd_DataIn(dev,y);
 	
 	lcd_CtrlIn(dev,RAMWR);
-	lcd_DataIn(dev,color>>8);
-	lcd_DataIn(dev,color);
+	lcd_DataIn(dev,pen>>8);
+	lcd_DataIn(dev,pen);
+}
+
+/*
+* 函数名称：lcd_ShowChar
+* 函数功能：在指定位置显示一个字符
+*/
+void lcd_ShowChar(lcd_t dev,rt_uint16_t x,rt_uint16_t y,char data)
+{	
+	int index = data-' ';
+	rt_uint8_t point = 0x00;
+	for(int row=0;row<16;row++)
+	{
+		point = font16[index][row];
+		for(int col=0;col<8;col++)
+		{
+			if((point>>col) & 0x01)
+				lcd_DrawPoint(dev,x,y,color);
+			else
+				lcd_DrawPoint(dev,x,y,WHITE);
+			y++;
+		}
+		y -= 8;
+		x++;
+	}
 }
 
 /*
 * 
 * 
 */
-void lcd_DrawLine(lcd_t dev,rt_uint16_t x0,rt_uint16_t y0,rt_uint16_t x1,rt_uint16_t y1,rt_uint16_t color)
+void lcd_ShowStr(lcd_t dev,rt_uint16_t x,rt_uint16_t y,char *data)
 {
-	
+	int j = rt_strlen(data);
+	for(int i=0;i<j;i++)
+	{
+		lcd_ShowChar(dev,x,y,*data);
+		data++;
+		y += 8;
+	}
 }
+
 
 /*
 * 函数名称：lcd_FillRect

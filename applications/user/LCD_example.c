@@ -6,9 +6,15 @@ static lcd_t dev;
 
 void lcd_test()
 {
-	lcd_FillRect(dev,50,50,100,100,GREEN);
+	lcd_ShowChar(dev,50,50,'C');
+	lcd_ShowChar(dev,100,50,'d');
+	lcd_ShowChar(dev,150,50,'E');
+	lcd_ShowChar(dev,50,100,'G');
+	lcd_ShowChar(dev,50,150,'k');
+	
+	lcd_ShowStr(dev,200,100,"KO YOU");
 }
-MSH_CMD_EXPORT(lcd_test,lcd write test);
+MSH_CMD_EXPORT(lcd_test,lcd show test);
 
 int lcd_example()
 {
@@ -33,4 +39,4 @@ int lcd_example()
 		rt_kprintf("lcd_init ok!\n");
 	return 1;
 }
-MSH_CMD_EXAMPLE(lcd_example,lcd device example);
+MSH_CMD_EXPORT(lcd_example,lcd device example);
