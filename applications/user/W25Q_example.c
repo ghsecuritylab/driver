@@ -49,3 +49,27 @@ void W25Q_init()
 //	W25Q256_Deinit(dev);
 }
 MSH_CMD_EXPORT(W25Q_init,flash device init);
+
+
+#ifdef RT_USING_SFUD
+
+#include "spi_flash.h"
+#include "spi_flash_sfud.h"
+#include "drv_spi.h"
+
+void flash_test()
+{
+	 __HAL_RCC_GPIOE_CLK_ENABLE();
+    rt_hw_spi_device_attach("spi4", "spi40", GPIOE, GPIO_PIN_4);
+
+    if (RT_NULL == rt_sfud_flash_probe("W25Q256", "spi40"))
+    {
+        rt_kprintf("sfud to W25Q256 failed!\n");
+		return;
+    }
+	rt_kprintf("sufd to W25Q256 sucessful!\n");
+    return ;
+}
+MSH_CMD_EXPORT(flash_test, W25Q256 device test);
+
+#endif
