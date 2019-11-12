@@ -2372,15 +2372,6 @@
     <group>
         <name>Applications</name>
         <group>
-            <name>func</name>
-            <file>
-                <name>$PROJ_DIR$\applications\func\button.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\applications\func\rocker.c</name>
-            </file>
-        </group>
-        <group>
             <name>user</name>
             <file>
                 <name>$PROJ_DIR$\applications\user\AD7739.c</name>
@@ -2397,6 +2388,9 @@
         </group>
         <file>
             <name>$PROJ_DIR$\applications\main.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\applications\func\rocker.c</name>
         </file>
     </group>
     <group>
@@ -2423,10 +2417,19 @@
     <group>
         <name>DeviceDrivers</name>
         <file>
+            <name>$PROJ_DIR$\rt-thread\components\drivers\sdio\block_dev.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\rt-thread\components\drivers\src\completion.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\rt-thread\components\drivers\src\dataqueue.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\rt-thread\components\drivers\sdio\mmc.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\rt-thread\components\drivers\sdio\mmcsd_core.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\rt-thread\components\drivers\misc\pin.c</name>
@@ -2439,6 +2442,12 @@
         </file>
         <file>
             <name>$PROJ_DIR$\rt-thread\components\drivers\src\ringbuffer.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\rt-thread\components\drivers\sdio\sd.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\rt-thread\components\drivers\sdio\sdio.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\rt-thread\components\drivers\serial\serial.c</name>
@@ -2529,12 +2538,39 @@
         </file>
     </group>
     <group>
+        <name>Filesystem</name>
+        <file>
+            <name>$PROJ_DIR$\rt-thread\components\dfs\filesystems\devfs\devfs.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\rt-thread\components\dfs\src\dfs.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\rt-thread\components\dfs\src\dfs_file.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\rt-thread\components\dfs\src\dfs_fs.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\rt-thread\components\dfs\src\dfs_posix.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\rt-thread\components\dfs\src\poll.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\rt-thread\components\dfs\src\select.c</name>
+        </file>
+    </group>
+    <group>
         <name>finsh</name>
         <file>
             <name>$PROJ_DIR$\rt-thread\components\finsh\cmd.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\rt-thread\components\finsh\msh.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\rt-thread\components\finsh\msh_file.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\rt-thread\components\finsh\shell.c</name>
@@ -2648,6 +2684,9 @@
             <name>$PROJ_DIR$\libraries\STM32H7xx_HAL\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_rng.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\libraries\STM32H7xx_HAL\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_sd.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\libraries\STM32H7xx_HAL\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_spi.c</name>
         </file>
         <file>
@@ -2661,6 +2700,9 @@
         </file>
         <file>
             <name>$PROJ_DIR$\libraries\STM32H7xx_HAL\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_usart.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\libraries\STM32H7xx_HAL\STM32H7xx_HAL_Driver\Src\stm32h7xx_ll_sdmmc.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\libraries\STM32H7xx_HAL\CMSIS\Device\ST\STM32H7xx\Source\Templates\system_stm32h7xx.c</name>

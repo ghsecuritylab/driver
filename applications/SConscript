@@ -8,9 +8,12 @@ main.c
 
 if GetDepend(['Board_Using_Rocker']):
     src += Glob('func/rocker.c')
-if GetDepend(['Board_Using_Rocker']):
+if GetDepend(['Board_Using_Button']):
     src += Glob('func/button.c')
-	
-group = DefineGroup('Applications', src, depend = [''])
+
+path = [cwd]
+path += [cwd + '/user']
+CPPDEFINES = ['STM32H743xx']
+group = DefineGroup('Applications', src, depend = [''], CPPPATH = path, CPPDEFINES = CPPDEFINES)
 
 Return('group')
