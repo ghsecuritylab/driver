@@ -8,71 +8,136 @@
 #define LOG_TAG	"rocker"
 #include <drv_log.h>
 
+#define ch_amount	4
+
+// 使能按钮
+#define Clip_Hand	GET_PIN(B,10)//GET_PIN(C, 5)	// DI14
+#define Left_Wheel	GET_PIN(C, 4)	// DI15
+#define Right_Wheel	GET_PIN(B, 1)	// DI16
+
 static AD7739_t rocker = RT_NULL;
 static rt_sem_t rocker_lock = RT_NULL; 
 
-typedef struct{
-	rt_uint16_t deg;
-	rt_uint16_t persent;
-}rocker_s;
+rt_uint8_t AI_Data[ch_amount] = {128,128,128,128};
 
-static rocker_s direction(rt_uint32_t x,rt_uint32_t y);
+/*
+* translate value between 0 and 255
+*/
+static rt_uint8_t deal(rt_uint32_t value)
+{
+	float trans = 0;
+	
+	// limit max and min
+	if(value>450)
+		value = 450;
+	else if(value<50)
+		value = 50;
+	
+	// resort range of value
+	if((value<260)&&(value>240))
+		return 128;
+	else if(value>250)
+	{
+		trans = (value-250.0) / 200.0;
+		return (rt_uint8_t)(127+128*trans);
+	}
+	else if(value<250)
+	{
+		trans = (250.0-value) / 200.0;
+		return (rt_uint8_t)(128-128*trans);
+	}
+	else
+		return 128;
+}
+
+/*
+* read and deal AD7739 data
+*/
+static void ad_process()
+{
+	float temp = 0;
+	rt_uint8_t data[ch_amount*3] = {0};
+	static rt_uint32_t rocker_buffer[ch_amount] = {0};
+	static rt_uint8_t flag = 0;
+	
+	flag++;
+	// do read ever twice translation
+	if((flag%2)==0)	
+	{
+		ad7739_channel_read(rocker,data,3);// read all enabled channel
+		for(int i=0;i<ch_amount;i++)// link all enabled AD channels data
+		{
+			int j=i*3;
+			rocker_buffer[i] += (data[j]<<16) | (data[j+1]<<8) | (data[j+2]);
+		}			
+	}
+	
+	// deal with data after five read ops
+	if(flag == 10)
+	{
+		flag = 0;				
+		for(int i=0;i<4;i++)
+		{
+			// using 1.0 replace 5.0 because of filtering
+			temp = rocker_buffer[i] * 1.0 / (1<<24); 
+			rocker_buffer[i] = (rt_uint32_t)(temp * 100);
+		}
+		
+		rt_memset(AI_Data,128,4);// default value
+		if(rt_pin_read(Clip_Hand))
+		{
+			rt_thread_delay(10);
+			if(rt_pin_read(Clip_Hand))
+			{
+				AI_Data[0] = deal(rocker_buffer[0]);
+				AI_Data[1] = deal(rocker_buffer[1]);
+			}
+		}
+		if(rt_pin_read(Left_Wheel))
+		{
+			rt_thread_delay(10);
+			if(rt_pin_read(Left_Wheel))
+			{
+				AI_Data[2] = deal(rocker_buffer[2]);
+			}
+		}
+		if(rt_pin_read(Right_Wheel))
+		{
+			rt_thread_delay(10);
+			if(rt_pin_read(Right_Wheel))
+			{
+				AI_Data[3] = deal(rocker_buffer[3]);
+			}
+		}
+		rt_memset(rocker_buffer,0,32);
+		
+		rt_kprintf("left speed is:%d;right speed is:%d;updown speen is:%d;turn speed is:%d\n",
+				   AI_Data[0],AI_Data[1],AI_Data[2],AI_Data[3]);
+	}
+}
 
 /*
 * AD7739 ready pin irq callback func
 */
 static void ready(void *args)
 {
-	rt_sem_release(rocker_lock);//释放信号量
+	rt_sem_release(rocker_lock);// release semaphore
 }
 
 /*
 * rocker thread func
 */
-
 static void rocker_entry(void *parameter)
 {
-	float temp = 0;
-	rt_uint8_t data[24] = {0};
-	rt_uint32_t rocker_buffer[8] = {0};
-	rt_uint8_t flag = 0;
-	rocker_s resault;
 	while(1)
 	{
-		rt_sem_take(rocker_lock,RT_WAITING_FOREVER);//永久等待信号量
-		rt_pin_irq_enable(rocker->ready_pin,PIN_IRQ_DISABLE);//停止AD7739中断，进行数据运算
+		rt_sem_take(rocker_lock,RT_WAITING_FOREVER);// waiting for AD7739 translate over
+		rt_pin_irq_enable(rocker->ready_pin,PIN_IRQ_DISABLE);// stop AD7739 ready pin irq
 		
-		flag++;
-		if((flag%10)==0)	
-		{
-			ad7739_channel_read(rocker,data,3);//读所有通道数据
-
-			for(int i=0;i<8;i++)//整合通道数据
-			{
-				int j=i*3;
-				rocker_buffer[i] += (data[j]<<16) | (data[j+1]<<8) | (data[j+2]);
-			}			
-			
-			if(flag == 50)
-			{
-				flag = 0;//复位计数
-				
-				for(int i=0;i<8;i++)// 换算通道结果
-				{
-					temp = rocker_buffer[i] * 1.0 / (1<<24);
-					rocker_buffer[i] = (rt_uint32_t)(temp * 100);
-				}
-				
-				resault = direction(rocker_buffer[0],rocker_buffer[1]);
-				rt_kprintf("deg is:%d;persent is:%d\n",resault.deg,resault.persent);
-				rt_memset(rocker_buffer,0,32);
-/*				rt_kprintf("%d %d %d %d %d %d %d %d\n",// 输出结果
-				   resault[0],resault[1],resault[2],resault[3],
-				   resault[4],resault[5],resault[6],resault[7]);
-*/			}
-		}
-		rt_thread_mdelay(10);// 让出CPU 10ms，防止中断长时间占用CPU
-		rt_pin_irq_enable(rocker->ready_pin,PIN_IRQ_ENABLE);//计算结束，开启中断
+		ad_process();
+		
+		rt_thread_mdelay(10);// drop out cpu
+		rt_pin_irq_enable(rocker->ready_pin,PIN_IRQ_ENABLE);// restart ready pin irq
 	}
 }
 
@@ -88,7 +153,7 @@ void rocker_init()
 	}
 	
 	rocker->adc_device_name = "rocker_device";
-	rocker->channel_enable = 0xff;
+	rocker->channel_enable = 0x0f;
 	rocker->ready_pin = GET_PIN(B, 7);
 	rocker->reset_pin = GET_PIN(B, 6);
 	ad7739_init("spi1",rocker,GPIOB,GPIO_PIN_5);
@@ -114,81 +179,11 @@ void rocker_init()
 	rt_pin_attach_irq(rocker->ready_pin,PIN_IRQ_MODE_FALLING,ready,RT_NULL);//bind ready pin irq
 	rt_pin_irq_enable(rocker->ready_pin,PIN_IRQ_ENABLE);// enable irq
 	
+	rt_pin_mode(Left_Wheel,PIN_MODE_INPUT_PULLDOWN);
+	rt_pin_mode(Right_Wheel,PIN_MODE_INPUT_PULLDOWN);
+	rt_pin_mode(Clip_Hand,PIN_MODE_INPUT_PULLDOWN);
+	
 	rt_thread_startup(tid);
 }
 MSH_CMD_EXPORT(rocker_init,init rocker device);
-
-
-static rocker_s direction(rt_uint32_t x,rt_uint32_t y)
-{
-	rocker_s res;
-	
-	float Xt,Yt = 0.0;	// X轴 、Y轴变化量
-	rt_uint16_t r = 0;
-	float arg = 0.0;
-	rt_uint16_t deg = 0;
-	
-	/*	误差范围内认为原点	*/
-	if((x>240)&&(x<260))
-		x = 250;
-	if((y>240)&&(y<260))
-		y = 250;
-	
-	/*	Count Distance From (0,0)	*/
-	Xt = x - 250.0;
-	Yt = y - 250.0;
-	r = (rt_uint16_t)sqrt(Xt*Xt + Yt*Yt);
-	r = r*100/200;// r%
-	if(r>100)
-		r=100;// 限制最大值
-	
-	/*	Angle Translation */
-	arg = atanf(Yt/Xt);
-	arg = fabsf(arg);	// Absolutely Radian Value
-	deg = (rt_uint16_t)(arg*180/3.14); // Angle Value
-	
-	/*		attach position		*/
-	if (x==250)// y轴上
-	{
-		if(y==250)
-		{
-			r = 0; deg = 0;
-		}
-		else if(y>250)
-		{
-			deg = 90;
-		}
-		else if(y<250)
-		{
-			deg = 270;
-		}
-	}
-	else if(x>250)// x轴正向侧
-	{
-		if(y>=250)//第1象限
-		{
-			deg = deg;
-		}
-		else if(y<250)//第4象限
-		{
-			deg = 360-deg;
-		}
-	}
-	else if(x<250)// x轴负向侧
-	{
-		if(y>=250)//第2象限
-		{
-			deg = 180-deg;
-		}
-		else if(y<250)//第3象限
-		{
-			deg = 180+deg;
-		}
-	}
-	
-	// Put data into package 
-	res.persent = r;
-	res.deg = deg;
-	return res;
-}
 

@@ -2390,9 +2390,6 @@
             <name>$PROJ_DIR$\applications\func\button.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\applications\user\LCD_example.c</name>
-        </file>
-        <file>
             <name>$PROJ_DIR$\applications\main.c</name>
         </file>
         <file>

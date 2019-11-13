@@ -18,12 +18,12 @@ static void btn_entry(void *parameter)
 	{
 		for(int i=0;i<20;i++)
 		{
-			if(rt_pin_read(btn_index[i]);
+			if(rt_pin_read(btn_index[i]))
 				status |= 1<<i;	// 位标识开关动作
 		}
 		
 		if(status)
-			rt_kprintf("%b\n",status);
+			rt_kprintf("%04X\n",status);
 		status = 0x0000;
 		rt_thread_delay(10);
 	}
