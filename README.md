@@ -1,7 +1,7 @@
 # F743_OPC BSP 说明
 
 ## 简介
- - 工程基于STM32F743VIT6芯片，使用RT-Thread实时操作系统
+ - 工程基于STM32H743VIT6芯片，使用RT-Thread实时操作系统
  - HSE : 25MHz 有源晶振
  - LSE : 32.768kHz 石英晶振
  
