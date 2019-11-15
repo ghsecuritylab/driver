@@ -2,6 +2,9 @@
 #define __LCD_H__
 #include <board.h>
 
+#define LCDDIR	1	// 0: ˙∆¡ 	1:∫·∆¡
+#define DEFAULT_BACK	0xffff
+
 /* =========== Color ========== */
 #define RED     	0xf800
 #define GREEN   	0x07e0
@@ -81,7 +84,7 @@ typedef struct lcd *lcd_t;
 
 void lcd_ColorSet(rt_uint16_t paint);
 void lcd_DrawPoint(lcd_t dev,rt_uint16_t x,rt_uint16_t y,rt_uint16_t pen);
-void lcd_FillRect(lcd_t dev,rt_uint16_t x,rt_uint16_t y,rt_uint16_t length,rt_uint16_t width,rt_uint16_t color);
+void lcd_FillRect(lcd_t dev,rt_uint16_t x0,rt_uint16_t y0,rt_uint16_t x1,rt_uint16_t y1,rt_uint16_t color);
 
 void lcd_ShowChar(lcd_t dev,rt_uint16_t x,rt_uint16_t y,char data);
 void lcd_ShowStr(lcd_t dev,rt_uint16_t x,rt_uint16_t y,char *data);

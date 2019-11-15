@@ -6,6 +6,8 @@ static lcd_t dev;
 
 void lcd_test()
 {
+	lcd_FillRect(dev,0,0,40,40,BLUE);
+		
 	lcd_ShowChar(dev,50,50,'C');
 	lcd_ShowChar(dev,100,50,'d');
 	lcd_ShowChar(dev,150,50,'E');

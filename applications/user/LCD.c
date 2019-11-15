@@ -1,5 +1,6 @@
 #include <rtthread.h>
 #include <rtdevice.h>
+#include <math.h>
 #include <drv_spi.h>
 
 #ifdef BSP_USING_Board_LCD
@@ -95,8 +96,8 @@ void lcd_ShowChar(lcd_t dev,rt_uint16_t x,rt_uint16_t y,char data)
 }
 
 /*
-* 
-* 
+* 函数名称：lcd_ShowStr
+* 函数功能：在指定位置显示字符串
 */
 void lcd_ShowStr(lcd_t dev,rt_uint16_t x,rt_uint16_t y,char *data)
 {
@@ -113,32 +114,43 @@ void lcd_ShowStr(lcd_t dev,rt_uint16_t x,rt_uint16_t y,char *data)
 /*
 * 函数名称：lcd_FillRect
 * 函数功能：以某种颜色填充一块矩形
-* 参数说明：x 行起始地址；y 列起始地址；length 长度；width 宽度；color 填充色
+* 参数说明：x0 行起始地址；y0 列起始地址；x1 行结束地址；y1 列结束地址；color 填充色
 */
-void lcd_FillRect(lcd_t dev,rt_uint16_t x,rt_uint16_t y,rt_uint16_t length,rt_uint16_t width,rt_uint16_t color)
+void lcd_FillRect(lcd_t dev,rt_uint16_t x0,rt_uint16_t y0,rt_uint16_t x1,rt_uint16_t y1,rt_uint16_t color)
 {
-	lcd_CtrlIn(dev,RASET);// 设置行地址
-	lcd_DataIn(dev,x>>8);
-	lcd_DataIn(dev,x);
-	lcd_DataIn(dev,length>>8);
-	lcd_DataIn(dev,length);
-	lcd_CtrlIn(dev,CASET);// 设置列地址
-	lcd_DataIn(dev,y>>8);
-	lcd_DataIn(dev,y);
-	lcd_DataIn(dev,width>>8);
-	lcd_DataIn(dev,width);
+	rt_uint16_t tr = 0;
+	if(x0>x1){
+		tr = (rt_uint16_t)fmin(x0,x1);
+		x1 = (rt_uint16_t)fmax(x0,x1);
+		x0 = tr;
+	}
+	if(y0>y1){
+		tr = (rt_uint16_t)fmin(y0,y1);
+		y1 = (rt_uint16_t)fmax(y0,y1);
+		y0 = tr;
+	}
 	
-	lcd_CtrlIn(dev,RAMWR);
-	for(int i=0;i<width;i++)
+	lcd_CtrlIn(dev,RASET);// 设置行地址
+	lcd_DataIn(dev,x0>>8);
+	lcd_DataIn(dev,x0);
+	lcd_DataIn(dev,x1>>8);
+	lcd_DataIn(dev,x1);
+	lcd_CtrlIn(dev,CASET);// 设置列地址
+	lcd_DataIn(dev,y0>>8);
+	lcd_DataIn(dev,y0);
+	lcd_DataIn(dev,y1>>8);
+	lcd_DataIn(dev,y1);
+	
+	lcd_CtrlIn(dev,RAMWR);// 写RAM命令
+	for(int i=0;i<(y1-y0+1);i++)
 	{
-		for(int j=0;j<length;j++)
+		for(int j=0;j<(x1-x0+1);j++)
 		{
 			lcd_DataIn(dev,color>>8);
 			lcd_DataIn(dev,color);
 		}
 	}
 }
-
 
 
 /*
@@ -182,11 +194,17 @@ rt_err_t lcd_init(lcd_t dev,const char *spi_bus,GPIO_TypeDef *GPIOx,uint16_t GPI
 	
 	lcd_CtrlIn(dev,SLPOUT);// 退出睡眠
 	rt_thread_delay(150);
-	lcd_CtrlIn(dev,MRACTL);// RAM 格式
-	lcd_DataIn(dev,0x60);
 	lcd_CtrlIn(dev,COLMOD);// 色彩格式
 	lcd_DataIn(dev,0x55);
-	lcd_FillRect(dev,0,0,240,320,0xffff);// 清屏，白色
+	lcd_CtrlIn(dev,MRACTL);// RAM 格式
+#if LCDDIR==0
+	lcd_DataIn(dev,0x00);
+	lcd_FillRect(dev,0,0,320,240,DEFAULT_BACK);// 清屏
+#else
+	lcd_DataIn(dev,0x60);
+	lcd_FillRect(dev,0,0,240,320,DEFAULT_BACK);// 清屏
+#endif	
+	
 	lcd_CtrlIn(dev,0x29);  // 开显示
 	return RT_EOK;
 }
