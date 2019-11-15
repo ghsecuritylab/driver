@@ -61,19 +61,16 @@ static void ad_process()
 	static rt_uint8_t flag = 0;
 	
 	flag++;
-	// do read ever twice translation
-	if((flag%2)==0)	
+
+	ad7739_channel_read(rocker,data,3);// read all enabled channel
+	for(int i=0;i<ch_amount;i++)// link all enabled AD channels data
 	{
-		ad7739_channel_read(rocker,data,3);// read all enabled channel
-		for(int i=0;i<ch_amount;i++)// link all enabled AD channels data
-		{
-			int j=i*3;
-			rocker_buffer[i] += (data[j]<<16) | (data[j+1]<<8) | (data[j+2]);
-		}			
-	}
+		int j=i*3;
+		rocker_buffer[i] += (data[j]<<16) | (data[j+1]<<8) | (data[j+2]);
+	}			
 	
 	// deal with data after five read ops
-	if(flag == 10)
+	if(flag == 5)
 	{
 		flag = 0;				
 		for(int i=0;i<4;i++)
