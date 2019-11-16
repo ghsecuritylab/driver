@@ -2,13 +2,22 @@
 #include <rtdevice.h>
 #include "AD7739.h"
 
-/**** Useing C Library ****/
-#include <math.h>
+#include "comm.h"
+static msg roc_m;
+rt_uint8_t len;
 
 #define LOG_TAG	"rocker"
 #include <drv_log.h>
 
 #define ch_amount	4
+
+/**** 摇杆外部接口数据 ****/
+rt_uint8_t Walk_L = 128;// 左履带通道数据
+rt_uint8_t Walk_R = 128;// 右履带通道数据
+rt_uint8_t Cut_M  = 128;// 截割臂升降数据
+rt_uint8_t Cut_T  = 128;// 截割臂左右转数据
+
+
 
 // 使能按钮
 #define Clip_Hand	GET_PIN(B,10)//GET_PIN(C, 5)	// DI14
@@ -107,9 +116,12 @@ static void ad_process()
 			}
 		}
 		rt_memset(rocker_buffer,0,32);
+		roc_m.type = 0;
+		roc_m.buffer = ((AI_Data[3]<<24)|(AI_Data[2]<<16)|(AI_Data[1]<<8)|(AI_Data[0]));
+		rt_mb_send_wait(com,(rt_ubase_t)&roc_m,RT_WAITING_FOREVER);
+//		rt_kprintf("left speed is:%d;right speed is:%d;updown speen is:%d;turn speed is:%d\n",
+//				   AI_Data[0],AI_Data[1],AI_Data[2],AI_Data[3]);
 		
-		rt_kprintf("left speed is:%d;right speed is:%d;updown speen is:%d;turn speed is:%d\n",
-				   AI_Data[0],AI_Data[1],AI_Data[2],AI_Data[3]);
 	}
 }
 
