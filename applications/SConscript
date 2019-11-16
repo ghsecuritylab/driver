@@ -1,0 +1,20 @@
+import rtconfig
+from building import *
+
+cwd     = GetCurrentDir()
+src     = Split("""
+main.c
+""")
+
+if GetDepend(['Board_Using_Rocker']):
+    src += Glob('func/rocker.c')
+if GetDepend(['Board_Using_Button']):
+    src += Glob('func/button.c')
+
+path = [cwd]
+path += [cwd + '/user']
+path += [cwd + '/func']
+CPPDEFINES = ['STM32H743xx']
+group = DefineGroup('Applications', src, depend = [''], CPPPATH = path, CPPDEFINES = CPPDEFINES)
+
+Return('group')
