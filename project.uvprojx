@@ -54,7 +54,7 @@
           <CreateLib>0</CreateLib>
           <CreateHexFile>0</CreateHexFile>
           <DebugInformation>1</DebugInformation>
-          <BrowseInformation>1</BrowseInformation>
+          <BrowseInformation>0</BrowseInformation>
           <ListingPath>.\build\keil\List\</ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
@@ -283,12 +283,12 @@
                 <Size>0x100000</Size>
               </OCR_RVCT5>
               <OCR_RVCT6>
-                <Type>1</Type>
+                <Type>0</Type>
                 <StartAddress>0x30000000</StartAddress>
                 <Size>0x48000</Size>
               </OCR_RVCT6>
               <OCR_RVCT7>
-                <Type>1</Type>
+                <Type>0</Type>
                 <StartAddress>0x38000000</StartAddress>
                 <Size>0x10000</Size>
               </OCR_RVCT7>
@@ -471,6 +471,11 @@
               <FileName>button.c</FileName>
               <FileType>1</FileType>
               <FilePath>applications\func\button.c</FilePath>
+            </File>
+            <File>
+              <FileName>comm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\applications\func\comm.c</FilePath>
             </File>
           </Files>
         </Group>

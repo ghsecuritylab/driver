@@ -13,6 +13,7 @@ if GetDepend(['Board_Using_Button']):
 
 path = [cwd]
 path += [cwd + '/user']
+path += [cwd + '/func']
 CPPDEFINES = ['STM32H743xx']
 group = DefineGroup('Applications', src, depend = [''], CPPPATH = path, CPPDEFINES = CPPDEFINES)
 

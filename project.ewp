@@ -375,6 +375,7 @@
                     <state>$PROJ_DIR$\rt-thread\components\dfs\include</state>
                     <state>$PROJ_DIR$\rt-thread\components\libc\compilers\dlib</state>
                     <state>$PROJ_DIR$\rt-thread\components\libc\compilers\common</state>
+                    <state>$PROJ_DIR$\applications\func</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -2140,6 +2141,9 @@
         </group>
         <file>
             <name>$PROJ_DIR$\applications\func\button.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\applications\func\comm.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\applications\user\LCD_example.c</name>
