@@ -5,9 +5,9 @@
 extern rt_mailbox_t com;
 typedef struct
 {
-	rt_uint32_t buffer;
-	rt_uint32_t type;
-}msg;
+    rt_uint32_t buffer;
+    rt_uint32_t type;
+}opc_msg;
 
 
 #endif // comm.h

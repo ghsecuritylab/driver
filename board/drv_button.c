@@ -9,7 +9,7 @@
 #define DBG_COLOR
 #include <rtdbg.h>
 
-static msg send;
+static opc_msg send;
 
 /*****开关外部接口数据*****/
 rt_uint16_t steady = 0x0000;// 锁存开关

@@ -121,7 +121,7 @@ rt_err_t ad7739_init(const char *spi_bus_name,AD7739_t device,
     ad7739_config(device,device->channel_enable);
 #endif
 
-    LOG_I("%s init success!\n",device->adc_device_name);
+    LOG_I("%s init success!",device->adc_device_name);
     return RT_EOK;
 }
 

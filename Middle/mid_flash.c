@@ -37,7 +37,7 @@ int hw_spi_flash_init(void)
     {
         if (dfs_mount("W25Q256", "/", "elm", 0, 0) == RT_EOK)
         {
-            LOG_I("W25Q256 mount to '/' succes\n");
+            LOG_I("W25Q256 mount to '/' succes");
             
             mkdir("/sd", 0x777);
 
