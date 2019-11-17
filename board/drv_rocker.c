@@ -1,7 +1,6 @@
 #include "c_power.h"
 
 static opc_msg roc_m;
-rt_uint8_t len;
 
 #define DBG_ENABLE 
 #define DBG_SECTION_NAME  "drv.rocker"
@@ -80,7 +79,8 @@ static void ad_process()
             rocker_buffer[i] = (rt_uint32_t)(temp * 100);
         }
 
-        rt_memset(AI_Data,128,4);// default value
+        rt_memset(AI_Data,128,sizeof(AI_Data));// default value
+
         if(rt_pin_read(Clip_Hand))
         {
             rt_thread_delay(10);
@@ -106,12 +106,13 @@ static void ad_process()
                 AI_Data[3] = deal(rocker_buffer[3]);
             }
         }
-        rt_memset(rocker_buffer,0,32);
+
+        rt_memset(rocker_buffer,0,sizeof(rocker_buffer));
         roc_m.type = 0;
         roc_m.buffer = ((AI_Data[3]<<24)|(AI_Data[2]<<16)|(AI_Data[1]<<8)|(AI_Data[0]));
         rt_mb_send_wait(com,(rt_ubase_t)&roc_m,RT_WAITING_FOREVER);
-        LOG_D("left speed is:%d;right speed is:%d;updown speen is:%d;turn speed is:%d\n",AI_Data[0],AI_Data[1],AI_Data[2],AI_Data[3]);
-
+        LOG_D("left speed is:%d;right speed is:%d;updown speen is:%d;turn speed is:%d\n",
+        AI_Data[0],AI_Data[1],AI_Data[2],AI_Data[3]);
     }
 }
 
@@ -128,7 +129,6 @@ static void ready(void *args)
 */
 static void rocker_entry(void *parameter)
 {
-    rt_thread_delay(1000);
     while(1)
     {
         rt_sem_take(rocker_lock,RT_WAITING_FOREVER);// waiting for AD7739 translate over
@@ -136,7 +136,8 @@ static void rocker_entry(void *parameter)
 
         ad_process();
 
-        rt_thread_mdelay(2000);// drop out cpu
+        rt_thread_mdelay(10);// drop out cpu
+
         rt_pin_irq_enable(rocker->ready_pin,PIN_IRQ_ENABLE);// restart ready pin irq
     }
 }
@@ -175,6 +176,8 @@ int hw_rocker_init(void)
         ad7739_deinit(rocker);
         return -ERROR;
     }
+    
+    LOG_I("rocker init success!/n");
 
     rt_pin_attach_irq(rocker->ready_pin,PIN_IRQ_MODE_FALLING,ready,RT_NULL);//bind ready pin irq
     rt_pin_irq_enable(rocker->ready_pin,PIN_IRQ_ENABLE);// enable irq
