@@ -9,22 +9,22 @@
 /**********default config***********/
 const static rt_uint8_t AD7739_Config[4] =
 {
-	0x38,	//IO_PORT_VALUE			
-	0x0D,	//CHANNEL_SET_VALUE		参考电压：2.5V，通道连续转换
-	0x91,	//CHANNEL_CONV_TIME
-	0x22,	//MODE_SET_VALUE		连续转换模式，24位模式
-};		
+    0x38,	//IO_PORT_VALUE
+    0x0D,	//CHANNEL_SET_VALUE		参考电压：2.5V，通道连续转换
+    0x91,	//CHANNEL_CONV_TIME
+    0x22,	//MODE_SET_VALUE		连续转换模式，24位模式
+};
 
 
 struct AD7739
 {
-	struct rt_spi_device *spi_device;
-	
-	char *adc_device_name;
-	
-	rt_uint8_t channel_enable;
-	rt_uint8_t reset_pin;
-	rt_uint8_t ready_pin;
+    struct rt_spi_device *spi_device;
+
+    char *adc_device_name;
+
+    rt_uint8_t channel_enable;
+    rt_uint8_t reset_pin;
+    rt_uint8_t ready_pin;
 };
 typedef struct AD7739 *AD7739_t;
 
@@ -55,7 +55,7 @@ rt_size_t ad7739_read(AD7739_t device,rt_uint8_t addr,void *buffer,rt_uint8_t le
 void ad7739_channel_read(AD7739_t device,rt_uint8_t *buffer,rt_uint8_t length);
 
 rt_err_t ad7739_init(const char *spi_bus_name,AD7739_t adc,
-				GPIO_TypeDef *cs_gpiox, uint16_t cs_gpio_pin);
+                     GPIO_TypeDef *cs_gpiox, uint16_t cs_gpio_pin);
 
 void ad7739_deinit(AD7739_t device);
 

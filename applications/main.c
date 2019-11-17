@@ -11,15 +11,23 @@
 #include <rtthread.h>
 #include <rtdevice.h>
 #include <board.h>
+//#include "drv_lcd.h"
+#include "c_power.h"
+//#include "cllogo.h"
 
 int main(void)
 {
     int count = 1;
-	
+    rt_pin_mode(LED_RUN_PIN, PIN_MODE_OUTPUT);
+    rt_pin_mode(LED_ERR_PIN, PIN_MODE_OUTPUT);
+    
     while (count++)
     {
-//		rt_kprintf("test per 5s!\n");
-		rt_thread_mdelay(3000);
+        rt_thread_mdelay(200);
+        
+        rt_pin_write(LED_RUN_PIN, !rt_pin_read(LED_RUN_PIN));
+        
+        rt_pin_write(LED_ERR_PIN, !rt_pin_read(LED_ERR_PIN));
     }
     return RT_EOK;
 }

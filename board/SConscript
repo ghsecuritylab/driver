@@ -10,6 +10,11 @@ cwd = GetCurrentDir()
 src = Split('''
 board.c
 drv_mpu.c
+drv_ad7739.c
+drv_button.c
+drv_fram.c
+drv_rocker.c
+drv_lcd.c
 CubeMX_Config/Src/stm32h7xx_hal_msp.c
 ''')
 
