@@ -10,7 +10,6 @@
 #include <rtdbg.h>
 
 static opc_msg send;
-
 /*****开关外部接口数据*****/
 rt_uint16_t steady = 0x0000;// 锁存开关
 rt_uint16_t action = 0x0000;// 动态开关
@@ -101,7 +100,8 @@ static void btn_process()
             steady |= 0x0800;// set bit11 0
         }
 
-        rt_memset(&action,0,2);
+        rt_memset(&action,0,sizeof(action));
+
         if(btn_list & (1<<12)) {// 截割臂
             action |= 0x0001;  // set bit0 1
         } else if(btn_list & (1<<13)) {

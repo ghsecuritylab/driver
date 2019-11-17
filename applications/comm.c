@@ -1,7 +1,9 @@
 #include "c_power.h"
 
 rt_mailbox_t com = RT_NULL;
+
 static opc_msg *get;
+
 static rt_device_t handle = RT_NULL;
 
 static rt_uint32_t ai;
@@ -62,3 +64,4 @@ int community()
     return RT_EOK;
 }
 INIT_ENV_EXPORT(community/*,open community task*/);
+
