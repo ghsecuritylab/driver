@@ -72,7 +72,7 @@ int hw_fram_init(void)
     }
     else
     {
-        LOG_I("fm25cl64 device init success!\n");
+        LOG_I("fm25cl64 device init success!");
     }
     
     return resault;
