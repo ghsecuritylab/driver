@@ -102,7 +102,7 @@ rt_err_t ad7739_init(const char *spi_bus_name,AD7739_t device,
     if(device->spi_device==RT_NULL)
     {
         LOG_E("ADC device find error! Please check!\n");
-        return RT_NULL;
+        return -RT_ERROR;
     }
 
     /*        SPI Config        */
