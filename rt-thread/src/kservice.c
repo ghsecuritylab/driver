@@ -18,6 +18,7 @@
  * 2013-09-24     aozima       make sure the device is in STREAM mode when used by rt_kprintf.
  * 2015-07-06     Bernard      Add rt_assert_handler routine.
  */
+#include "c_power.h"
 
 #include <rtthread.h>
 #include <rthw.h>
@@ -539,6 +540,13 @@ void rt_show_version(void)
     rt_kprintf(" / | \\     %d.%d.%d build %s\n",
                RT_VERSION, RT_SUBVERSION, RT_REVISION, __DATE__);
     rt_kprintf(" 2006 - 2019 Copyright by rt-thread team\n");
+
+    rt_kprintf("\n+---+____.----------------.____+---+\n");
+    rt_kprintf("| X |____|       CL       |____| X |\n");
+    rt_kprintf("+---+    |__@__________@__|    +---+\n\n");
+    rt_kprintf("    Intelligence Control System\n");
+    rt_kprintf("    V%d.%d.%d build %s\n\n",
+               CL_VERSION, CL_SUBVERSION, CL_REVISION, __DATE__);
 }
 RTM_EXPORT(rt_show_version);
 
