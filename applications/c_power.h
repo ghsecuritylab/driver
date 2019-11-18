@@ -10,6 +10,7 @@
 #include <drv_ad7739.h>
 #include <drv_spi.h>
 #include <drv_fram.h>
+#include "string.h"
 #include "spi_flash.h"
 #include "spi_flash_sfud.h"
 #include "comm.h"

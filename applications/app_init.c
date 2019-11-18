@@ -39,6 +39,7 @@ int app_init(void)
 
     /* show C-Power logo */
     lcd_show_image(0, 0, 240,54, gImage_cllog);
+    lcd_set_color(BLACK, WHITE);
     
     result = hw_rocker_init();      //rocker初始化(包含初始了AD7739)
     if(result != RT_EOK)
