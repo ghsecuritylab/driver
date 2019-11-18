@@ -14,28 +14,26 @@
 2, FLASH
 3, SD CARD
 4，BUTUON
-5, rocker
+5, rocker(包含ad7739)
 6，fram
 */
-#define LCD_PWR_PIN    GET_PIN(D, 13)
 
 int app_init(void)
 {
     int result;
-    rt_pin_mode(LCD_PWR_PIN,PIN_MODE_OUTPUT);
+    rt_pin_mode(LCD_PWR_PIN, PIN_MODE_OUTPUT);
     
+    rt_pin_write(LCD_PWR_PIN,0);
     result = hw_spi_flash_init();   //flash初始化
     if(result != RT_EOK)
     {
       LOG_E("flash init error");
-      return -RT_ERROR;
     }    
-    rt_pin_write(LCD_PWR_PIN,1);
+    
     result = hw_lcd_init();        //lcd初始化
     if(result != RT_EOK)
     {
       LOG_E("lcd init error");
-      return -RT_ERROR;
     }    
     lcd_clear(BLACK);
 
@@ -46,22 +44,21 @@ int app_init(void)
     if(result != RT_EOK)
     {
       LOG_E("rocker init error");
-      return -RT_ERROR;
     }
 
     result = hw_fram_init();        //fram初始化
     if(result != RT_EOK)
     {
       LOG_E("fram init error");
-      return -RT_ERROR;
     }
     
     result = hw_button_init();     //button初始化
     if(result != RT_EOK)
     {
       LOG_E("button init error");
-      return -RT_ERROR;
     }
+    
+    lcd_blk_enable(); //所有外设初始化完成后点亮LCD
     
     return result;
 }

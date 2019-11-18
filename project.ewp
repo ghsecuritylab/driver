@@ -2205,6 +2205,9 @@
       <name>$PROJ_DIR$\board\drv_lcd.c</name>
     </file>
     <file>
+      <name>$PROJ_DIR$\board\drv_pwm.c</name>
+    </file>
+    <file>
       <name>$PROJ_DIR$\board\CubeMX_Config\Src\stm32h7xx_hal_msp.c</name>
     </file>
     <file>
@@ -2464,6 +2467,15 @@
     </file>
     <file>
       <name>$PROJ_DIR$\libraries\STM32H7xx_HAL\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_gpio.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\libraries\STM32H7xx_HAL\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_tim.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\libraries\STM32H7xx_HAL\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_tim_ex.c</name>
+    </file>
+    <file>
+      <name>$PROJ_DIR$\libraries\STM32H7xx_HAL\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_lptim.c</name>
     </file>
     <file>
       <name>$PROJ_DIR$\libraries\STM32H7xx_HAL\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_uart.c</name>

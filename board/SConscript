@@ -15,6 +15,7 @@ drv_button.c
 drv_fram.c
 drv_rocker.c
 drv_lcd.c
+drv_pwm.c
 CubeMX_Config/Src/stm32h7xx_hal_msp.c
 ''')
 
