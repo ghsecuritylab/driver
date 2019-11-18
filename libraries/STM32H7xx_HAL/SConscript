@@ -26,9 +26,6 @@ STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_rcc_ex.c
 STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_rng.c
 STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_sram.c
 STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_gpio.c
-STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim.c
-STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim_ex.c
-STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_lptim.c
 ''')
  
 if GetDepend(['RT_USING_SERIAL']):
@@ -53,6 +50,11 @@ if GetDepend(['RT_USING_USB_HOST']) or GetDepend(['RT_USING_USB_DEVICE']):
 
 if GetDepend(['RT_USING_CAN']):
     src += ['STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_fdcan.c']
+
+if GetDepend(['RT_USING_HWTIMER']) or GetDepend(['RT_USING_PWM']):
+    src += ['STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim.c']
+    src += ['STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_tim_ex.c']
+    src += ['STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_lptim.c']
 
 if GetDepend(['BSP_USING_ETH']):
     src += ['STM32H7xx_HAL_Driver/Src/stm32h7xx_hal_eth.c']

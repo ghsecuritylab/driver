@@ -14,53 +14,55 @@
 2, FLASH
 3, SD CARD
 4，BUTUON
-5, rocker(包含ad7739)
+5, rocker
 6，fram
 */
+#define LCD_PWR_PIN    GET_PIN(D, 13)
 
 int app_init(void)
 {
     int result;
-    rt_pin_mode(LCD_PWR_PIN, PIN_MODE_OUTPUT);
+    rt_pin_mode(LCD_PWR_PIN,PIN_MODE_OUTPUT);
     
-    rt_pin_write(LCD_PWR_PIN,0);
     result = hw_spi_flash_init();   //flash初始化
     if(result != RT_EOK)
     {
       LOG_E("flash init error");
+      return -RT_ERROR;
     }    
-    
+    rt_pin_write(LCD_PWR_PIN,1);
     result = hw_lcd_init();        //lcd初始化
     if(result != RT_EOK)
     {
       LOG_E("lcd init error");
+      return -RT_ERROR;
     }    
     lcd_clear(BLACK);
 
     /* show C-Power logo */
     lcd_show_image(0, 0, 240,54, gImage_cllog);
-    lcd_set_color(BLACK, WHITE);
     
     result = hw_rocker_init();      //rocker初始化(包含初始了AD7739)
     if(result != RT_EOK)
     {
       LOG_E("rocker init error");
+      return -RT_ERROR;
     }
 
     result = hw_fram_init();        //fram初始化
     if(result != RT_EOK)
     {
       LOG_E("fram init error");
+      return -RT_ERROR;
     }
     
     result = hw_button_init();     //button初始化
     if(result != RT_EOK)
     {
       LOG_E("button init error");
+      return -RT_ERROR;
     }
-    
-    lcd_blk_enable(); //所有外设初始化完成后点亮LCD
     
     return result;
 }
-INIT_APP_EXPORT(app_init);
+INIT_ENV_EXPORT(app_init);
