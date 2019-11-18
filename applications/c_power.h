@@ -14,6 +14,10 @@
 #include "spi_flash_sfud.h"
 #include "comm.h"
 
+#define CL_VERSION                      1L              /**< major version number */
+#define CL_SUBVERSION                   0L              /**< minor version number */
+#define CL_REVISION                     0L              /**< revise version number */
+
 #define LED_RUN_PIN     GET_PIN(C, 6)
 #define LED_ERR_PIN     GET_PIN(C, 7)
 #define LCD_PWR_PIN     GET_PIN(D, 13)
