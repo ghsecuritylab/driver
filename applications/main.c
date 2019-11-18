@@ -11,9 +11,7 @@
 #include <rtthread.h>
 #include <rtdevice.h>
 #include <board.h>
-//#include "drv_lcd.h"
 #include "c_power.h"
-//#include "cllogo.h"
 
 int main(void)
 {
