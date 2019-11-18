@@ -1,23 +1,28 @@
 #include "c_power.h"
 
-static opc_msg roc_m;
-
 #define DBG_ENABLE 
 #define DBG_SECTION_NAME  "drv.rocker"
 #define DBG_LEVEL          DBG_LOG
 #define DBG_COLOR
 #include <rtdbg.h>
 
-/**** 摇杆外部接口数据 ****/
-rt_uint8_t Walk_L = 128;// 左履带通道数据
-rt_uint8_t Walk_R = 128;// 右履带通道数据
-rt_uint8_t Cut_M  = 128;// 截割臂升降数据
-rt_uint8_t Cut_T  = 128;// 截割臂左右转数据
-
 static AD7739_t rocker = RT_NULL;
 static rt_sem_t rocker_lock = RT_NULL;
+static rt_mutex_t mess_lock = RT_NULL;
 
-rt_uint8_t AI_Data[ch_amount] = {128,128,128,128};
+static rt_uint8_t AI_Data[ch_amount] = {128,128,128,128};
+
+/*
+* get rocker's data
+*/
+rt_uint32_t rocker_get(void)
+{
+	rt_uint32_t resault = 0;	
+	rt_mutex_take(mess_lock,RT_WAITING_FOREVER);
+	resault = ((AI_Data[3]<<24)|(AI_Data[2]<<16)|(AI_Data[1]<<8)|(AI_Data[0]));
+	rt_mutex_release(mess_lock);
+	return resault;
+}
 
 /*
 * translate value between 0 and 255
@@ -60,8 +65,9 @@ static void ad_process()
     static rt_uint8_t flag = 0;
 
     flag++;
-
+	
     ad7739_channel_read(rocker,data,3);// read all enabled channel
+	
     for(int i=0; i<ch_amount; i++) // link all enabled AD channels data
     {
         int j=i*3;
@@ -108,11 +114,6 @@ static void ad_process()
         }
 
         rt_memset(rocker_buffer,0,sizeof(rocker_buffer));
-        roc_m.type = 0;
-        roc_m.buffer = ((AI_Data[3]<<24)|(AI_Data[2]<<16)|(AI_Data[1]<<8)|(AI_Data[0]));
-        rt_mb_send_wait(com,(rt_ubase_t)&roc_m,RT_WAITING_FOREVER);
-        LOG_D("left speed is:%d;right speed is:%d;updown speen is:%d;turn speed is:%d\n",
-        AI_Data[0],AI_Data[1],AI_Data[2],AI_Data[3]);
     }
 }
 
@@ -134,10 +135,11 @@ static void rocker_entry(void *parameter)
         rt_sem_take(rocker_lock,RT_WAITING_FOREVER);// waiting for AD7739 translate over
         rt_pin_irq_enable(rocker->ready_pin,PIN_IRQ_DISABLE);// stop AD7739 ready pin irq
 
+		rt_mutex_take(mess_lock,RT_WAITING_FOREVER);
         ad_process();
-
+		rt_mutex_release(mess_lock);
+		
         rt_thread_mdelay(10);// drop out cpu
-
         rt_pin_irq_enable(rocker->ready_pin,PIN_IRQ_ENABLE);// restart ready pin irq
     }
 }
@@ -174,9 +176,19 @@ int hw_rocker_init(void)
         LOG_E("rocker thread create failed!\n");
         rt_free(rocker_lock);
         ad7739_deinit(rocker);
-        return -ERROR;
+        return -RT_ERROR;
     }
     
+	mess_lock = rt_mutex_create("rocker_mess_lock",RT_IPC_FLAG_FIFO);
+    if(mess_lock == RT_NULL)
+    {
+        LOG_E("rocker mess_lock create falied!\n");
+        rt_free(rocker_lock);
+		rt_free(mess_lock);
+        ad7739_deinit(rocker);
+        return -RT_ERROR;
+    }
+	
     LOG_I("rocker init success!/n");
 
     rt_pin_attach_irq(rocker->ready_pin,PIN_IRQ_MODE_FALLING,ready,RT_NULL);//bind ready pin irq
