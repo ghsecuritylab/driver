@@ -65,4 +65,4 @@ int app_init(void)
     
     return result;
 }
-INIT_APP_EXPORT(app_init);
+INIT_ENV_EXPORT(app_init);
