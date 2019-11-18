@@ -908,7 +908,7 @@ int hw_lcd_init(void)
 
     /* Memory Data Access Control */
     lcd_write_cmd(0x36);
-    lcd_write_data(0x60);
+    lcd_write_data(0x00);
 
     /* RGB 5-6-5-bit  */
     lcd_write_cmd(0x3A);
