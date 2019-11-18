@@ -15,7 +15,7 @@
 #ifdef RT_USING_SPI
 
 #if defined(BSP_USING_SPI1) || defined(BSP_USING_SPI2) || defined(BSP_USING_SPI3) || defined(BSP_USING_SPI4) || defined(BSP_USING_SPI5) || defined(BSP_USING_SPI6)
-/* this driver can be disabled at menuconfig → RT-Thread Components → Device Drivers */
+/* this driver can be disabled at menuconfig   RT-Thread Components   Device Drivers */
 
 #include "drv_spi.h"
 #include "drv_config.h"
