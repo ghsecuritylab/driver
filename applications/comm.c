@@ -29,8 +29,8 @@ static void com_entry(void *parameter)
         e=(rt_uint16_t)(di);
         f=(rt_uint16_t)(di>>16);
 
-        rt_kprintf("rocker:%d %d %d %d	switch:%04x %04x\n",
-                   a,b,c,d,e,f);
+//        rt_kprintf("rocker:%d %d %d %d	switch:%04x %04x\n",
+//                   a,b,c,d,e,f);
     }
 }
 

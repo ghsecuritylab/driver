@@ -11,16 +11,15 @@
 #include <rtthread.h>
 #include <rtdevice.h>
 #include <board.h>
-//#include "drv_lcd.h"
 #include "c_power.h"
-//#include "cllogo.h"
+#include "drv_lcd.h"
 
 int main(void)
 {
     int count = 1;
     rt_pin_mode(LED_RUN_PIN, PIN_MODE_OUTPUT);
     rt_pin_mode(LED_ERR_PIN, PIN_MODE_OUTPUT);
-    
+
     while (count++)
     {
         rt_thread_mdelay(200);

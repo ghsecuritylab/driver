@@ -2,10 +2,10 @@
 
 static opc_msg roc_m;
 
-#define DBG_ENABLE 
-#define DBG_SECTION_NAME  "drv.rocker"
-#define DBG_LEVEL          DBG_LOG
-#define DBG_COLOR
+//#define DBG_ENABLE 
+//#define DBG_SECTION_NAME  "drv.rocker"
+//#define DBG_LEVEL          DBG_LOG
+//#define DBG_COLOR
 #include <rtdbg.h>
 
 /**** 摇杆外部接口数据 ****/
