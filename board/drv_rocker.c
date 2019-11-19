@@ -170,7 +170,7 @@ int hw_rocker_init(void)
         return -RT_ERROR;
     }
 
-    tid = rt_thread_create("rocker",rocker_entry,RT_NULL,1024,10,15);
+    tid = rt_thread_create("rocker",rocker_entry,RT_NULL,1024,12,15);
     if(tid==RT_NULL)
     {
         LOG_E("rocker thread create failed!\n");

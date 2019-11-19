@@ -188,7 +188,7 @@ int hw_button_init(void)
 	
     {
         rt_thread_t tid = RT_NULL;
-        tid = rt_thread_create("button",btn_entry,RT_NULL,512,8,20);
+        tid = rt_thread_create("button",btn_entry,RT_NULL,512,11,20);
         if(tid==RT_NULL)
         {
 			rt_free(tid);
