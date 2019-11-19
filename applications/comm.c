@@ -59,79 +59,80 @@ int community()
 }
 
 static void value_deal(void)
-{
-	if(e&(1<<0))
+{	
+	if(e&(1<<btn_enable))
 			lcd_show_string(12,105,24,"%s","1");
 		else 
 			lcd_show_string(12,105,24,"%s","0");
 		
-	if(e&(1<<1))
+	if(e&(1<<auto_mode))
 		lcd_show_string(36,105,24,"%s","1");
 	else 
 		lcd_show_string(36,105,24,"%s","0");
 	
-	if(e&(1<<2))
+	if(e&(1<<oiltank_start))
 		lcd_show_string(60,105,24,"%s","1");
-	else if(e&(1<<3))
+	else if(e&(1<<oiltank_stop))
 		lcd_show_string(60,105,24,"%s","0");
 	
-	if(e&(1<<4))
+	if(e&(1<<highcut_start))
 		lcd_show_string(84,105,24,"%s","1");
-	else if(e&(1<<5))
+	else if(e&(1<<haghcut_stop))
 		lcd_show_string(84,105,24,"%s","0");
 	
-	if(e&(1<<6))
+	if(e&(1<<lowcut_start))
 		lcd_show_string(108,105,24,"%s","1");
-	else if(e&(1<<7))
+	else if(e&(1<<lowcut_stop))
 		lcd_show_string(108,105,24,"%s","0");
 	
-	if(e&(1<<8))
+	if(e&(1<<twofunc_start))
 		lcd_show_string(132,105,24,"%s","1");
-	else if(e&(1<<9))
+	else if(e&(1<<twofunc_stop))
 		lcd_show_string(132,105,24,"%s","0");
 	
-	if(e&(1<<10))
+	if(e&(1<<fan_start))
 		lcd_show_string(156,105,24,"%s","1");
-	else if(e&(1<<11))
+	else if(e&(1<<fan_stop))
 		lcd_show_string(156,105,24,"%s","0");
 	
-	if(e&(1<<12))
+	if(e&(1<<pump_start))
 		lcd_show_string(180,105,24,"%s","1");
-	else if(e&(1<<13))
+	else if(e&(1<<pump_stop))
 		lcd_show_string(180,105,24,"%s","0");
+
 	
 	if(f==0){
 		lcd_show_string(0,164,24,"%s"," 0  0  0  0  0  0 ");
 		return;
 	}
 	
-	if(f&(1<<0))
+	if(f&(1<<cutarm_out))
 		lcd_show_string(120,164,24,"%s","1");
-	else if(f&(1<<1))
+	else if(f&(1<<cutarm_back))
 		lcd_show_string(120,164,24,"%s","-1");
 	
-	if(f&(1<<2))
+	if(f&(1<<star_forward))
 		lcd_show_string(12,164,24,"%s","1");
-	else if(f&(1<<3))
+	else if(f&(1<<star_reverse))
 		lcd_show_string(12,164,24,"%s","-1");	
 	
-	if(f&(1<<4))
+	if(f&(1<<onefunc_forward))
 		lcd_show_string(48,164,24,"%s","1");
-	else if(f&(1<<5))
+	else if(f&(1<<onefunc_reverse))
 		lcd_show_string(48,164,24,"%s","-1");
 	
-	if(f&(1<<6))
+	if(f&(1<<twofunc_forward))
 		lcd_show_string(84,164,24,"%s","1");
-	else if(f&(1<<7))
+	else if(f&(1<<twofunc_reverse))
 		lcd_show_string(84,164,24,"%s","-1");
 	
-	if(f&(1<<8))
+	if(f&(1<<plate_up))
 		lcd_show_string(156,164,24,"%s","1");
-	else if(f&(1<<9))
+	else if(f&(1<<plate_down))
 		lcd_show_string(156,164,24,"%s","-1");
 	
-	if(f&(1<<10))
+	if(f&(1<<rearprop_up))
 		lcd_show_string(192,164,24,"%s","1");
-	else if(f&(1<<11))
+	else if(f&(1<<rearprop_down))
 		lcd_show_string(192,164,24,"%s","-1");
 }

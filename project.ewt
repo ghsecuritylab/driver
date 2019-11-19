@@ -2371,35 +2371,14 @@
     </configuration>
     <group>
         <name>Applications</name>
-        <group>
-            <name>user</name>
-            <file>
-                <name>$PROJ_DIR$\applications\user\AD7739.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\applications\user\FM25CL64.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\applications\user\LCD.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\applications\user\W25Q256FV.c</name>
-            </file>
-        </group>
         <file>
-            <name>$PROJ_DIR$\applications\func\button.c</name>
+            <name>$PROJ_DIR$\applications\app_init.c</name>
         </file>
         <file>
-            <name>$PROJ_DIR$\applications\func\comm.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\applications\user\LCD_example.c</name>
+            <name>$PROJ_DIR$\applications\comm.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\applications\main.c</name>
-        </file>
-        <file>
-            <name>$PROJ_DIR$\applications\func\rocker.c</name>
         </file>
     </group>
     <group>
@@ -2451,6 +2430,9 @@
         </file>
         <file>
             <name>$PROJ_DIR$\rt-thread\components\drivers\src\ringbuffer.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\rt-thread\components\drivers\rtc\rtc.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\rt-thread\components\drivers\sdio\sd.c</name>
@@ -2525,13 +2507,34 @@
             <name>$PROJ_DIR$\board\board.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\board\drv_ad7739.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\board\drv_button.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\libraries\HAL_Drivers\drv_common.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\board\drv_fram.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\libraries\HAL_Drivers\drv_gpio.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\board\drv_lcd.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\board\drv_mpu.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\board\drv_pwm.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\board\drv_rocker.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\libraries\HAL_Drivers\drv_rtc.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\libraries\HAL_Drivers\drv_spi.c</name>
@@ -2549,10 +2552,16 @@
     <group>
         <name>Filesystem</name>
         <file>
+            <name>$PROJ_DIR$\rt-thread\components\dfs\filesystems\elmfat\option\ccsbcs.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\rt-thread\components\dfs\filesystems\devfs\devfs.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\rt-thread\components\dfs\src\dfs.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\rt-thread\components\dfs\filesystems\elmfat\dfs_elm.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\rt-thread\components\dfs\src\dfs_file.c</name>
@@ -2562,6 +2571,9 @@
         </file>
         <file>
             <name>$PROJ_DIR$\rt-thread\components\dfs\src\dfs_posix.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\rt-thread\components\dfs\filesystems\elmfat\ff.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\rt-thread\components\dfs\src\poll.c</name>
@@ -2637,6 +2649,18 @@
         </file>
     </group>
     <group>
+        <name>Middle</name>
+        <file>
+            <name>$PROJ_DIR$\Middle\mid_ad7739.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\Middle\mid_flash.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\Middle\mid_fram.c</name>
+        </file>
+    </group>
+    <group>
         <name>STM32_HAL</name>
         <file>
             <name>$PROJ_DIR$\libraries\STM32H7xx_HAL\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal.c</name>
@@ -2672,6 +2696,9 @@
             <name>$PROJ_DIR$\libraries\STM32H7xx_HAL\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_gpio.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\libraries\STM32H7xx_HAL\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_lptim.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\libraries\STM32H7xx_HAL\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_mdma.c</name>
         </file>
         <file>
@@ -2693,6 +2720,12 @@
             <name>$PROJ_DIR$\libraries\STM32H7xx_HAL\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_rng.c</name>
         </file>
         <file>
+            <name>$PROJ_DIR$\libraries\STM32H7xx_HAL\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_rtc.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\libraries\STM32H7xx_HAL\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_rtc_ex.c</name>
+        </file>
+        <file>
             <name>$PROJ_DIR$\libraries\STM32H7xx_HAL\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_sd.c</name>
         </file>
         <file>
@@ -2700,6 +2733,12 @@
         </file>
         <file>
             <name>$PROJ_DIR$\libraries\STM32H7xx_HAL\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_sram.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\libraries\STM32H7xx_HAL\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_tim.c</name>
+        </file>
+        <file>
+            <name>$PROJ_DIR$\libraries\STM32H7xx_HAL\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_tim_ex.c</name>
         </file>
         <file>
             <name>$PROJ_DIR$\libraries\STM32H7xx_HAL\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_uart.c</name>
