@@ -23,7 +23,7 @@ int app_init(void)
     int result;
     rt_pin_mode(LCD_PWR_PIN, PIN_MODE_OUTPUT);
     
-    rt_pin_write(LCD_PWR_PIN,0);
+    rt_pin_write(LCD_PWR_PIN,1);
     result = hw_spi_flash_init();   //flash初始化
     if(result != RT_EOK)
     {
@@ -59,8 +59,8 @@ int app_init(void)
       LOG_E("button init error");
     }
     
-    lcd_blk_enable(); //所有外设初始化完成后点亮LCD
-    
+//    lcd_blk_enable(); //所有外设初始化完成后点亮LCD
+    community();//rocker 和 button初始化之后开启
     return result;
 }
 INIT_APP_EXPORT(app_init);
