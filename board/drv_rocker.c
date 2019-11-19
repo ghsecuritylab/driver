@@ -10,6 +10,7 @@ static AD7739_t rocker = RT_NULL;
 static rt_sem_t rocker_lock = RT_NULL;
 static rt_mutex_t mess_lock = RT_NULL;
 
+#define ch_amount    4 //ad7739 读取通道数
 static rt_uint8_t AI_Data[ch_amount] = {128,128,128,128};
 
 /*
@@ -170,7 +171,8 @@ int hw_rocker_init(void)
         return -RT_ERROR;
     }
 
-    tid = rt_thread_create("rocker",rocker_entry,RT_NULL,1024,12,15);
+    tid = rt_thread_create(ROCKER_THREAD_NAME,rocker_entry,RT_NULL,
+							ROCKER_THREAD_STACK_SIZE,ROCKER_THREAD_PRIORITY,15);
     if(tid==RT_NULL)
     {
         LOG_E("rocker thread create failed!\n");

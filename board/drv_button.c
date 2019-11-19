@@ -6,10 +6,8 @@
 #define DBG_COLOR
 #include <rtdbg.h>
 
-/*****开关接口数据*****/
 static rt_uint16_t steady = 0x0000;// 锁存开关
 static rt_uint16_t action = 0x0000;// 动态开关
-
 
 #define btn_num		26		// 开关数量
 static rt_mutex_t btn_lock = RT_NULL;
@@ -188,7 +186,8 @@ int hw_button_init(void)
 	
     {
         rt_thread_t tid = RT_NULL;
-        tid = rt_thread_create("button",btn_entry,RT_NULL,512,11,20);
+        tid = rt_thread_create(BUTTON_THREAD_NAME,btn_entry,RT_NULL,
+								BUTTON_THREAD_STACK_SIZE,BUTTON_THREAD_PRIORITY,20);
         if(tid==RT_NULL)
         {
 			rt_free(tid);

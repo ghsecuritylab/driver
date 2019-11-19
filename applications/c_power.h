@@ -15,22 +15,35 @@
 #include "spi_flash_sfud.h"
 #include "drv_lcd.h"
 
+/*********  project version  **********/
+
 #define CL_VERSION                      1L              /**< major version number */
 #define CL_SUBVERSION                   0L              /**< minor version number */
 #define CL_REVISION                     0L              /**< revise version number */
+
 
 #define LED_RUN_PIN     GET_PIN(C, 6)
 #define LED_ERR_PIN     GET_PIN(C, 7)
 #define LCD_PWR_PIN     GET_PIN(D, 13)
 
+
+/**************  rocker  ***************/
+
+#define ROCKER_THREAD_NAME	"rocker"
+#define ROCKER_THREAD_PRIORITY 12
+#define ROCKER_THREAD_STACK_SIZE 1024
 // 使能按钮
 #define Clip_Hand       GET_PIN(C, 5)// DI14
 #define Left_Wheel      GET_PIN(C, 4)// DI15 左摇
 #define Right_Wheel     GET_PIN(B, 1)// DI16 右摇
 
-#define ch_amount    4 //ad7739 读取通道数
 
-// button.c  steady
+/**************  button  ****************/
+
+#define BUTTON_THREAD_NAME	"button"
+#define BUTTON_THREAD_PRIORITY 11
+#define BUTTON_THREAD_STACK_SIZE 512
+// button.c steady bit
 #define btn_enable		0		//控制使能
 #define auto_mode		1		//自控模式
 #define oiltank_start	2		//油泵启
@@ -45,8 +58,7 @@
 #define fan_stop		11		//风机停
 #define pump_start		12		//水泵启
 #define pump_stop		13		//水泵停
-
-// button.c  action
+// button.c action bit
 #define cutarm_out		0		//截割臂伸
 #define cutarm_back		1		//截割臂缩
 #define star_forward	2		//星轮正转
