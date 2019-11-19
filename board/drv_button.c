@@ -6,7 +6,7 @@
 #define DBG_COLOR
 #include <rtdbg.h>
 
-static rt_uint16_t steady = 0x0000;// 锁存开关
+static rt_uint16_t steady = 0x2aa8;// 锁存开关
 static rt_uint16_t action = 0x0000;// 动态开关
 
 #define btn_num		26		// 开关数量
@@ -42,7 +42,7 @@ rt_uint32_t button_get(void)
 */
 static rt_uint32_t btn_get()
 {
-    rt_uint32_t status = 0x00;
+    rt_uint32_t status = 0x00000000;
     for(int i=0; i<btn_num; i++) {
         status |= ((rt_pin_read(btn_index[i])) << i);
     }
@@ -171,7 +171,7 @@ static void btn_entry(void *parameter)
 
 int hw_button_init(void)
 {
-	for(int i=0; i<20; i++)
+	for(int i=0; i<btn_num; i++)
     {
         rt_pin_mode(btn_index[i],PIN_MODE_INPUT_PULLDOWN); //默认低电平，配置下拉输入
     }
