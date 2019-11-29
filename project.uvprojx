@@ -472,11 +472,6 @@
               <FileType>1</FileType>
               <FilePath>applications\app_init.c</FilePath>
             </File>
-            <File>
-              <FileName>nnn.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\applications\nnn.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>

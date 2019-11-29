@@ -53,14 +53,14 @@ rt_size_t ad7739_read(AD7739_t device,rt_uint8_t addr,void *buffer,rt_uint8_t le
 */
 void ad7739_channel_read(AD7739_t device,rt_uint8_t *buffer,rt_uint8_t length)
 {
-    rt_uint8_t adc_status = 0x00;
+//    rt_uint8_t adc_status = 0x00;
 
-    /*** waitting for all enabled channel translate over ***/
-    while(adc_status!=device->channel_enable)
-    {
-        ad7739_read(device,AD7739_ADC_STATUS,&adc_status,1);
-        rt_thread_delay(1);
-    }
+//    /*** waitting for all enabled channel translate over ***/
+//    while(adc_status!=device->channel_enable)
+//    {
+//        ad7739_read(device,AD7739_ADC_STATUS,&adc_status,1);
+//        rt_thread_delay(1);
+//    }
 
     for(int i=0; i<8; i++)
     {
@@ -110,7 +110,7 @@ rt_err_t ad7739_init(const char *spi_bus_name,AD7739_t device,
         struct rt_spi_configuration cfg;
         cfg.data_width = 8;
         cfg.mode = RT_SPI_MASTER | RT_SPI_MODE_3 | RT_SPI_MSB;
-        cfg.max_hz = 6 * 1000 *1000;	//6MHz
+        cfg.max_hz = 20 * 1000 *1000;	//20MHz
         rt_spi_configure(device->spi_device,&cfg);
     }
 
